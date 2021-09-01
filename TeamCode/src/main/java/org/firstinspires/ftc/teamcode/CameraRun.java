@@ -10,6 +10,6 @@ public class CameraRun extends LinearOpMode {
     private static T265Camera camera;
 
     public void runOpMode() {
-
+        // beans
     }
 }
