@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.libraries;
+package org.firstinspires.ftc.teamcode.libs;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
@@ -28,6 +28,7 @@ public class CameraMain {
     private double[] motorSpeeds;
     private Translation2d translation2d;
     private BNO055IMU imu;
+    private T265Camera camera;
     private AxesReference axesReference;
     private final FtcDashboard dashboard = FtcDashboard.getInstance();
     private final TelemetryPacket packet = new TelemetryPacket();
@@ -42,7 +43,7 @@ public class CameraMain {
     boolean yComplete = false;
     boolean turnComplete = false;
 
-    public void setUpInternal(DcMotor[] motors, double[] angles, BNO055IMU imu, AxesReference axesReference, Telemetry telemetry) {
+    public void setUpInternal(DcMotor[] motors, double[] angles, BNO055IMU imu, T265Camera camera, AxesReference axesReference, Telemetry telemetry) {
         if (motors.length != angles.length) {
             throw new RuntimeException("Motor array length and angle array length are not the same! Check your code!");
         }
@@ -50,18 +51,19 @@ public class CameraMain {
         this.motorSpeeds = new double[motors.length];
         this.angles = angles;
         this.imu = imu;
+        this.camera = camera;
         this.axesReference = axesReference;
         this.telemetry = telemetry;
     }
 
     public void setPoseInternal(Pose2d pose) {
-        GlobalCamera.setPose(pose);
+        this.camera.setPose(pose);
     }
 
     public boolean goToInternal(double moveX, double moveY, double theta, double speed) {
         // Wrap theta to localTheta
         double localTheta = wrap(theta);
-        T265Camera.CameraUpdate up = GlobalCamera.getUpdate();
+        T265Camera.CameraUpdate up = this.camera.getLastReceivedCameraUpdate();
         if (up.confidence == T265Camera.PoseConfidence.Failed) { telemetry.addLine("Failed"); telemetry.update(); return false; }
 
         this.translation2d = up.pose.getTranslation();
@@ -144,7 +146,7 @@ public class CameraMain {
     }
 
     public Translation2d getPosition() {
-        Translation2d current = GlobalCamera.getUpdate().pose.getTranslation();
+        Translation2d current = this.camera.getLastReceivedCameraUpdate().pose.getTranslation();
         return new Translation2d(current.getX() / 0.0254, current.getY() / 0.0254);
     }
 
