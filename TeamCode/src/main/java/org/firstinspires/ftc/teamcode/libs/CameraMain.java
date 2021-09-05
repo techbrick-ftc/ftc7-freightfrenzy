@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.libs;
 
+import static org.firstinspires.ftc.teamcode.libs.Globals.*;
+import static java.lang.Math.PI;
+import static java.lang.Math.abs;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -8,6 +12,7 @@ import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.geometry.Translation2d;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.spartronics4915.lib.T265Camera;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -17,25 +22,21 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.OptionalDouble;
-
-import static java.lang.Math.PI;
-import static java.lang.Math.abs;
 
 public class CameraMain {
     private DcMotor[] motors;
     private double[] angles;
     private double[] motorSpeeds;
-    private Translation2d translation2d;
     private BNO055IMU imu;
+    private HashMap<String, String> orientationModifier;
     private T265Camera camera;
     private AxesReference axesReference;
     private final FtcDashboard dashboard = FtcDashboard.getInstance();
     private final TelemetryPacket packet = new TelemetryPacket();
     private final Canvas field = packet.fieldOverlay();
-    private final double maxSpeed = 0.8;
 
-    private Orientation gangles() { return imu.getAngularOrientation(axesReference, AxesOrder.ZYX, AngleUnit.RADIANS); }
     private Telemetry telemetry;
 
     // Create persistent variables
@@ -43,17 +44,63 @@ public class CameraMain {
     boolean yComplete = false;
     boolean turnComplete = false;
 
-    public void setUpInternal(DcMotor[] motors, double[] angles, BNO055IMU imu, T265Camera camera, AxesReference axesReference, Telemetry telemetry) {
+    public void setUpInternal(DcMotor[] motors, double[] angles, HashMap<String, String> orientationModifiers, AxesReference axesReference, HardwareMap hardwareMap, Telemetry telemetry) {
         if (motors.length != angles.length) {
             throw new RuntimeException("Motor array length and angle array length are not the same! Check your code!");
         }
         this.motors = motors;
         this.motorSpeeds = new double[motors.length];
         this.angles = angles;
-        this.imu = imu;
-        this.camera = camera;
+        setupIMU(hardwareMap);
+        this.imu = getImu();
+        this.orientationModifier = orientationModifiers;
+        setupCamera(hardwareMap);
+        this.camera = getCamera();
         this.axesReference = axesReference;
         this.telemetry = telemetry;
+    }
+
+    private Orientation gangles() {
+        Orientation orientation = imu.getAngularOrientation(axesReference, AxesOrder.ZYX, AngleUnit.RADIANS);
+        if (orientationModifier != null) {
+            for (String k : this.orientationModifier.keySet()) {
+                String v = this.orientationModifier.get(k);
+                if (v == null) throw new IllegalArgumentException("Value cannot be null.");
+                char axis = k.charAt(0);
+                char action = k.charAt(2);
+                switch (axis) {
+                    case '1':
+                        switch (action) {
+                            case '+': orientation.firstAngle += Double.parseDouble(v); break;
+                            case '-': orientation.firstAngle -= Double.parseDouble(v); break;
+                            case '*': orientation.firstAngle *= Double.parseDouble(v); break;
+                            case '/': orientation.firstAngle /= Double.parseDouble(v); break;
+                            default: throw new IllegalArgumentException("Unknown operator " + action);
+                        }
+                        break;
+                    case '2':
+                        switch (action) {
+                            case '+': orientation.secondAngle += Double.parseDouble(v); break;
+                            case '-': orientation.secondAngle -= Double.parseDouble(v); break;
+                            case '*': orientation.secondAngle *= Double.parseDouble(v); break;
+                            case '/': orientation.secondAngle /= Double.parseDouble(v); break;
+                            default: throw new IllegalArgumentException("Unknown operator " + action);
+                        }
+                        break;
+                    case '3':
+                        switch (action) {
+                            case '+': orientation.thirdAngle += Double.parseDouble(v); break;
+                            case '-': orientation.thirdAngle -= Double.parseDouble(v); break;
+                            case '*': orientation.thirdAngle *= Double.parseDouble(v); break;
+                            case '/': orientation.thirdAngle /= Double.parseDouble(v); break;
+                            default: throw new IllegalArgumentException("Unknown operator " + action);
+                        }
+                        break;
+                    default: throw new IllegalArgumentException("Unknown axis " + axis);
+                }
+            }
+        }
+        return orientation;
     }
 
     public void setPoseInternal(Pose2d pose) {
@@ -64,21 +111,13 @@ public class CameraMain {
         // Wrap theta to localTheta
         double localTheta = wrap(theta);
         T265Camera.CameraUpdate up = this.camera.getLastReceivedCameraUpdate();
-        if (up.confidence == T265Camera.PoseConfidence.Failed) { telemetry.addLine("Failed"); telemetry.update(); return false; }
+        if (up.confidence == T265Camera.PoseConfidence.Failed && telemetry != null) { telemetry.addLine("Failed"); telemetry.update(); return false; }
 
-        this.translation2d = up.pose.getTranslation();
+        Translation2d translation2d = up.pose.getTranslation();
 
-        double currentX = this.translation2d.getX() / 0.0254;
-        double currentY = this.translation2d.getY() / 0.0254;
+        double currentX = translation2d.getX() / 0.0254;
+        double currentY = translation2d.getY() / 0.0254;
         double currentTheta = gangles().firstAngle;
-
-        telemetry.addData("Current X", currentX);
-        telemetry.addData("Current Y", currentY);
-        telemetry.addData("Current Theta", currentTheta);
-        
-        System.out.println("Current X: " + currentX);
-        System.out.println("Current Y: " + currentY);
-        System.out.println("Current Theta: " + currentTheta);
 
         double deltaX = moveX - currentX;
         double deltaY = moveY - currentY;
@@ -86,7 +125,7 @@ public class CameraMain {
 
         xComplete = abs(deltaX) < 0.2;
         yComplete = abs(deltaY) < 0.2;
-        turnComplete = abs(deltaTheta) < 0.05;
+        turnComplete = abs(deltaTheta) < 0.1;
 
         if (xComplete && yComplete && turnComplete) {
             stopWheel();
@@ -97,6 +136,9 @@ public class CameraMain {
         driveTheta += gangles().firstAngle;
 
         double localSpeed = speed;
+        if (abs(deltaX) < 2 && abs(deltaY) < 2) {
+            localSpeed *= avg(abs(deltaX), abs(deltaY)) / 24;
+        } else
         if (abs(deltaX) < 5 && abs(deltaY) < 5) {
             localSpeed *= avg(abs(deltaX), abs(deltaY)) / 12;
         }
@@ -114,13 +156,13 @@ public class CameraMain {
 
         OptionalDouble optionalSpeed = Arrays.stream(motorSpeeds).max();
         double fastestSpeed = optionalSpeed.isPresent() ? optionalSpeed.getAsDouble() : 0;
+        double maxSpeed = 0.8;
         boolean scale = fastestSpeed > maxSpeed;
         double scaleFactor = maxSpeed / fastestSpeed;
         for (int i = 0; i < this.motors.length; i++) {
             this.motors[i].setPower(scale ? this.motorSpeeds[i] * scaleFactor : this.motorSpeeds[i]);
         }
 
-        //writeTelemetry(deltaX, deltaY, driveTheta);
 
         final int robotRadius = 9;
         Rotation2d rotation = up.pose.getRotation();
@@ -134,6 +176,8 @@ public class CameraMain {
         packet.put("X", currentX);
         packet.put("Y", currentY);
         packet.put("Confidence", up.confidence);
+
+        writeTelemetry(deltaX, deltaY, driveTheta);
 
         dashboard.sendTelemetryPacket(packet);
         telemetry.update();
@@ -182,7 +226,6 @@ public class CameraMain {
     }
 
     private void writeTelemetry(double deltaX, double deltaY, double driveTheta) {
-        if (telemetry == null) { return; }
         packet.put("FR Speed", motors[0].getPower());
         packet.put("RR Speed", motors[1].getPower());
         packet.put("RL Speed", motors[2].getPower());
@@ -190,6 +233,5 @@ public class CameraMain {
         packet.put("Delta X", deltaX);
         packet.put("Delta Y", deltaY);
         packet.put("Drive Theta", driveTheta);
-        dashboard.sendTelemetryPacket(packet);
     }
 }

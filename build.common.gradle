@@ -21,7 +21,7 @@ apply plugin: 'com.android.application'
 
 android {
 
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     signingConfigs {
         release {
@@ -47,9 +47,6 @@ android {
         }
     }
 
-    aaptOptions {
-        noCompress "tflite"
-    }
 
     defaultConfig {
         signingConfig signingConfigs.debug
@@ -57,18 +54,6 @@ android {
         minSdkVersion 24
         targetSdkVersion 30
 
-        /**
-         * We keep the versionCode and versionName of robot controller applications in sync with
-         * the master information published in the AndroidManifest.xml file of the FtcRobotController
-         * module. This helps avoid confusion that might arise from having multiple versions of
-         * a robot controller app simultaneously installed on a robot controller device.
-         *
-         * We accomplish this with the help of a funky little Groovy script that maintains that
-         * correspondence automatically.
-         *
-         * @see <a href="http://developer.android.com/tools/building/configuring-gradle.html">Configure Your Build</a>
-         * @see <a href="http://developer.android.com/tools/publishing/versioning.html">Versioning Your App</a>
-         */
         def manifestFile = project(':FtcRobotController').file('src/main/AndroidManifest.xml');
         def manifestText = manifestFile.getText()
         //
@@ -107,8 +92,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
     }
 
     sourceSets.main {
@@ -116,11 +101,5 @@ android {
         jniLibs.srcDir rootProject.file('libs')
     }
     ndkVersion '21.3.6528147'
-}
-
-repositories {
-    flatDir {
-        dirs rootProject.file('libs')
-    }
 }
 

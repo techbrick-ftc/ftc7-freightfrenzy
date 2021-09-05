@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.spartronics4915.lib.T265Camera;
 
-@TeleOp(name="Test T265", group="Iterative Opmode")
+@TeleOp(name="Test T265", group="Test")
 public class TestCameraOpMode extends OpMode
 {
     // We treat this like a singleton because there should only ever be one object per camera
@@ -53,6 +53,9 @@ public class TestCameraOpMode extends OpMode
         double x1 = translation.getX() + arrowX  / 2, y1 = translation.getY() + arrowY / 2;
         double x2 = translation.getX() + arrowX, y2 = translation.getY() + arrowY;
         field.strokeLine(x1, y1, x2, y2);
+
+        packet.put("X", translation.getX());
+        packet.put("Y", translation.getY());
 
         dashboard.sendTelemetryPacket(packet);
     }
