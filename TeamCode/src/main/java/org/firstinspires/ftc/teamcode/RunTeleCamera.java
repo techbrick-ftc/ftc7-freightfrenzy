@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.libs.TeleAuto;
 import org.firstinspires.ftc.teamcode.libs.TestBot;
 
 @TeleOp(name="",group="")
-public class RunTeleCamera extends LinearOpMode implements TeleAuto {
+abstract public class RunTeleCamera extends LinearOpMode implements TeleAuto {
     private final TestBot robot = new TestBot();
     private final FieldCentric drive = new FieldCentric();
     private final CameraTele auto = new CameraTele();
