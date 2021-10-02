@@ -61,7 +61,6 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.google.blocks.ftcrobotcontroller.ProgrammingWebHandlers;
 import com.google.blocks.ftcrobotcontroller.runtime.BlocksOpMode;
 import com.qualcomm.ftccommon.ClassManagerFactory;
@@ -331,7 +330,6 @@ public class FtcRobotControllerActivity extends Activity
             return onOptionsItemSelected(item); // Delegate to the handler for the hardware menu button
           }
         });
-        FtcDashboard.populateMenu(popupMenu.getMenu());
         popupMenu.inflate(R.menu.ftc_robot_controller);
         AnnotatedHooksClassFilter.getInstance().callOnCreateMenuMethods(
             FtcRobotControllerActivity.this, popupMenu.getMenu());
@@ -412,7 +410,6 @@ public class FtcRobotControllerActivity extends Activity
     checkPreferredChannel();
 
     AnnotatedHooksClassFilter.getInstance().callOnCreateMethods(this);
-    FtcDashboard.start();
   }
 
   protected UpdateUI createUpdateUI() {
@@ -486,7 +483,6 @@ public class FtcRobotControllerActivity extends Activity
     RobotLog.cancelWriteLogcatToDisk();
 
     AnnotatedHooksClassFilter.getInstance().callOnDestroyMethods(this);
-    FtcDashboard.stop();
   }
 
   protected void bindToService() {
@@ -543,7 +539,6 @@ public class FtcRobotControllerActivity extends Activity
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.ftc_robot_controller, menu);
     AnnotatedHooksClassFilter.getInstance().callOnCreateMenuMethods(this, menu);
-    FtcDashboard.populateMenu(menu);
     return true;
   }
 
@@ -712,7 +707,6 @@ public class FtcRobotControllerActivity extends Activity
 
     AnnotatedHooksClassFilter.getInstance().callWebHandlerRegistrarMethods(this,
         service.getWebServer().getWebHandlerManager());
-    FtcDashboard.attachWebServer(service.getWebServer());
   }
 
   private void updateUIAndRequestRobotSetup() {
@@ -759,7 +753,6 @@ public class FtcRobotControllerActivity extends Activity
     AndroidBoard.showErrorIfUnknownControlHub();
 
     AnnotatedHooksClassFilter.getInstance().callOnCreateEventLoopMethods(this, eventLoop);
-    FtcDashboard.attachEventLoop(eventLoop);
   }
 
   protected OpModeRegister createOpModeRegister() {
