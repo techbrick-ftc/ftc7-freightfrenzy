@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.libs.Globals;
 @Autonomous(name="RedAuto", group="teleop")
 public class RedAuto extends AutoImport {
 
-    public RedAuto() { super(65, -40, 225, 150, 0, 0); }
+    public RedAuto() { super(65, -40, 75, 110, 200, 110); }
 
     public void runOpMode() {
         super.runOpMode();
@@ -19,7 +19,13 @@ public class RedAuto extends AutoImport {
         if (opModeIsActive()) {
             // Goes to spinner and does spinny
             slauto.drive(55, -60, -90, 0.75, this);
-            doSpinny(true, 1000);
+            setSpinny(true, 1000);
+
+            // Goes to the shipping hub and delivers based on the team element position
+            // 1 is added to elementPosition because height's 0 is ground level, not the first layer
+            setArm(elementPosition + 1, 1);
+            slauto.drive(0, 0, 0, 0.75, this); // set position
+            runIntake(1, 2000);
 
             // Starts lifting arm
             armY.setTargetPosition(-2000);
@@ -29,7 +35,7 @@ public class RedAuto extends AutoImport {
             sleep(1000);
 
             // Goes to the other side of the wall in 3 connected movements
-            slauto.drive(50, -40, 0, 0.8, 0, this, false, true);
+            slauto.drive(50, -40, 0, 0.75, 0, this, false, true);
             slauto.drive(65, 0, 0, 0.5, 0, this, false, false);
             slauto.drive(65, 50, 0, 0.5, 0, this, true, false);
 

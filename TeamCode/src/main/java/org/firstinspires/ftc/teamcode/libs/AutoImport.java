@@ -43,13 +43,14 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected TelemetryPacket packet = new TelemetryPacket();
 
     // vars used in program
-    protected int activePosition;
+    protected int elementPosition;
     protected int startingPoseX;
     protected int startingPoseY;
     protected int camera1X;
     protected int camera1Y;
     protected int camera2X;
     protected int camera2Y;
+    protected int[] armYPositions = {0, -1930, -2800, -3800};
 
     public AutoImport(int startX, int startY, int cam1X, int cam1Y, int cam2X, int cam2Y) {
         startingPoseX = startX;
@@ -119,9 +120,10 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
 
         while (!isStarted()) {
             // loops this until start is pressed
-            packet.put("Position", activePosition);
+            elementPosition = getElementPosition(0);
+            packet.put("Position", elementPosition);
             dashboard.sendTelemetryPacket(packet);
-            telemetry.addData("Position", elementPosition(0));
+            telemetry.addData("Position", elementPosition);
             telemetry.update();
         }
         //camera.stopDetection();
@@ -135,7 +137,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     }
 
     // Function which pushes the robot spinner into the wall, before running it. True = red
-    public void doSpinny(boolean side, int timeout) {
+    public void setSpinny(boolean side, int timeout) {
         if (side) { // red
             slauto.drive(65, -60, -90, 0.5, timeout, this, false, false);
             spinner.setPower(-0.8);
@@ -147,8 +149,21 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
         }
     }
 
+    // Function which raises the arm to the required shipping hub positions
+    public void setArm(int height, double power) {
+        armY.setTargetPosition(armYPositions[height]);
+        armY.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armY.setPower(power);
+    }
+
+    // Function which runs the intake for a certain period of time. -1 = intake, 1 = outtake
+    public void runIntake(double power, int timeout) {
+        intake.setPower(power);
+        sleep(timeout);
+    }
+
     // Function which uses the webcam to return the team element's position
-    public int elementPosition(long delay) {
+    public int getElementPosition(long delay) {
         sleep(delay);
         return camera.getDetection();
     }

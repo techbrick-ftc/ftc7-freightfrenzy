@@ -60,7 +60,6 @@ public class MainTele extends AutoImport {
         double armXMin = -0.5;
         double armXMax = 0.5;
         int armYSetting = 0;
-        int[] armYPositions = {armY.getCurrentPosition(), -663, -1692, -2590};
 
         // Starting servo & motor positions
 
@@ -78,14 +77,14 @@ public class MainTele extends AutoImport {
             }
 
             // Gives FieldCentric the stick positions
-            drive.Drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, -gamepad1.right_stick_x);
+            drive.Drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, Range.clip(-gamepad1.right_stick_x, -0.75, 0.75));
 
             // Controls arm horizontal axis
             // Enforces encoder barriers at 90 and -90 degrees of starting position horizontally
-            if (armX.getCurrentPosition() >= 926) { // constant is ~1/4 of full encoder rotation
+            if (armX.getCurrentPosition() >= 1500) { // constant is ~1/4 of full encoder rotation
                 armXMax = 0;
                 armXMin = -0.5;
-            } else if (armX.getCurrentPosition() <= -926) {
+            } else if (armX.getCurrentPosition() <= -1500) {
                 armXMax = 0.5;
                 armXMin = 0;
             } else {
@@ -109,9 +108,15 @@ public class MainTele extends AutoImport {
                 armY.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 armY.setPower(1);
             }
-
             if (!armY.isBusy()) {
                 armY.setPower(0);
+            }
+
+            // Manual control for armY
+            if (gamepad2.left_stick_button) {
+                armY.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                double armYPower = gamepad2.left_stick_y;
+                armY.setPower(armYPower);
             }
 
             // Toggles intake
