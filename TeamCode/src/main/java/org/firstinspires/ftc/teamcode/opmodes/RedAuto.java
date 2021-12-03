@@ -24,9 +24,10 @@ public class RedAuto extends AutoImport {
             // Goes to the shipping hub and delivers based on the team element position
             // 1 is added to elementPosition because height's 0 is ground level, not the first layer
             setArm(elementPosition + 1, 1);
-            slauto.drive(0, 0, 0, 0.75, this); // set position
+            slauto.drive(40, -5, 0, 0.5, this);
             runIntake(1, 2000);
 
+            /*
             // Starts lifting arm
             armY.setTargetPosition(-2000);
             armY.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -38,6 +39,7 @@ public class RedAuto extends AutoImport {
             slauto.drive(50, -40, 0, 0.75, 0, this, false, true);
             slauto.drive(65, 0, 0, 0.5, 0, this, false, false);
             slauto.drive(65, 50, 0, 0.5, 0, this, true, false);
+            */
 
             stopCamera();
         }

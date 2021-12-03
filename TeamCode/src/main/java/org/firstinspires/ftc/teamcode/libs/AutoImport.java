@@ -137,8 +137,8 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     }
 
     // Function which pushes the robot spinner into the wall, before running it. True = red
-    public void setSpinny(boolean side, int timeout) {
-        if (side) { // red
+    public void setSpinny(boolean redSide, int timeout) {
+        if (redSide) { // red
             slauto.drive(65, -60, -90, 0.5, timeout, this, false, false);
             spinner.setPower(-0.8);
             sleep(4000);
@@ -160,6 +160,15 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     public void runIntake(double power, int timeout) {
         intake.setPower(power);
         sleep(timeout);
+    }
+
+    // Function which deposits a thing. true = opening, false = closing
+    public void deposit(boolean opening) {
+        if (opening) {
+            hatch.setPosition(-1);
+        } else {
+            hatch.setPosition(1);
+        }
     }
 
     // Function which uses the webcam to return the team element's position
