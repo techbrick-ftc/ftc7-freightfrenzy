@@ -47,6 +47,12 @@ public class SimpleSlamra {
         this.camera = getCamera();
     }
 
+    public Translation2d getPose () {
+        T265Camera.CameraUpdate up = camera.getLastReceivedCameraUpdate();
+        Translation2d pose = new Translation2d(up.pose.getTranslation().getX() / 0.0254, up.pose.getTranslation().getY() / 0.0254);
+        return pose;
+    }
+
     public void drive(double targetX, double targetY, double targetDegree, double speed, TeleAuto callback) {
         drive(targetX, targetY, targetDegree, speed, 0, callback, true, true);
     }
