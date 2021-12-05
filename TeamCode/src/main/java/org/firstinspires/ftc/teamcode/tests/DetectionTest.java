@@ -10,7 +10,7 @@ public class DetectionTest extends AutoImport {
 
     public DetectionTest() {
         // change cam values
-        super(0, 0, 55, 120, 185, 120);
+        super(0, 0, 75, 170, 173, 170);
     }
 
     public void runOpMode() {

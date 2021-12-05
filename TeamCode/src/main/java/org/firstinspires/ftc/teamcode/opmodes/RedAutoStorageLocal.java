@@ -3,15 +3,14 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import static org.firstinspires.ftc.teamcode.libs.Globals.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.libs.AutoImport;
-import org.firstinspires.ftc.teamcode.libs.Globals;
 
-@Autonomous(name="RedAutoStorageLong", group="teleop")
-public class RedAutoStorageLong extends AutoImport {
+@Autonomous(name="RedAutoStorageLocal", group="teleop")
+public class RedAutoStorageLocal extends AutoImport {
 
-    public RedAutoStorageLong() { super(65, -40, 75, 170, 173, 170); }
+    public RedAutoStorageLocal() { super(65, -40, 75, 170, 173, 170); }
 
     public void runOpMode() {
         super.runOpMode();
@@ -25,25 +24,19 @@ public class RedAutoStorageLong extends AutoImport {
             // 1 is added to elementPosition because height's 0 is ground level, not the first layer
             setArm(elementPosition + 1, 1);
             sleep(1000);
-            slauto.drive(25, -55, -90, 0.75, 0, this, false, true);
+            slauto.drive(25, -60, -90, 0.75, 0, this, false, true);
             slauto.drive(25, -33, -90, 0.75, 0, this, true, false);
             deposit(true);
             sleep(1000);
-            runIntake(1, 1000);
-            sleep(1000);
+            //runIntake(1, 1000);
+            //sleep(1000);
+            slauto.drive(25, -35, -90, 1, 0, this, false, false);
+            slauto.drive(25, -33, -90, 1, 0, this, false, false);
             deposit(false);
 
-            // Goes over to the warehouse
-            slauto.drive(0, -26, -90, 0.75, 0, this, false, true);
-            slauto.drive(15, 6, 180, 0.75, 0, this, true, false);
-            sleep(500);
-
-            // Goes into the warehouse
-            packet.put("zooming", "commenced");
-            dashboard.sendTelemetryPacket(packet);
-            slauto.drive(15, 37, 180, 1, 0, this, true, false);
-            slauto.drive(15, 36, -90, 0.75, this);
-            slauto.drive(40, 36, -90, 1, 0, this, true, false);
+            // Parks in storage
+            slauto.drive(23, -55, 0, 0.75, this);
+            slauto.drive(42, -60, 0, 0.75, this);
 
             // Lowers arm
             setArm(0, 1);

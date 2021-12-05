@@ -113,10 +113,16 @@ public class MainTele extends AutoImport {
             }
 
             // Manual control for armY
-            if (gamepad2.left_stick_button) {
+            if (gamepad2.left_stick_button && !armBoundaryMin.isPressed()) {
                 armY.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 double armYPower = gamepad2.left_stick_y;
                 armY.setPower(armYPower);
+            }
+
+            // Resets arm encs if touch is pressed
+            if (armBoundaryMin.isPressed()) {
+                resetEnc(armX);
+                resetEnc(armY);
             }
 
             // Toggles intake

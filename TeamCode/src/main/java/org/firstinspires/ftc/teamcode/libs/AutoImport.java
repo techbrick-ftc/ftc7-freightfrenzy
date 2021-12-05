@@ -33,14 +33,15 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected Servo hatch = null;
     protected CRServo spinner = null;
 
-    //protected TouchSensor armBoundryMin = null;
-    //protected TouchSensor armBoundryMax = null;
+    protected TouchSensor armBoundaryMin = null;
 
     protected SimpleSlamra slauto = new SimpleSlamra();
     protected EasyOpenCVImportable camera = new EasyOpenCVImportable();
 
     protected FtcDashboard dashboard = FtcDashboard.getInstance();
     protected TelemetryPacket packet = new TelemetryPacket();
+
+    protected ElapsedTime timer = new ElapsedTime();
 
     // vars used in program
     protected int elementPosition;
@@ -50,7 +51,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected int camera1Y;
     protected int camera2X;
     protected int camera2Y;
-    protected int[] armYPositions = {0, -1930, -2800, -3700};
+    protected int[] armYPositions = {0, -1930, -2800, -3800};
 
     public AutoImport(int startX, int startY, int cam1X, int cam1Y, int cam2X, int cam2Y) {
         startingPoseX = startX;
@@ -89,6 +90,8 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
 
         spinner = hardwareMap.get(CRServo.class, "spinner");
 
+        armBoundaryMin = hardwareMap.get(TouchSensor.class, "touch");
+
         // initializes imu
         setupIMU(hardwareMap);
         telemetry.addLine("IMU Done");
@@ -96,13 +99,17 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
 
         // initializes easyopencv
         // width and height of vision box are hardcoded here
-        camera.init(EasyOpenCVImportable.CameraType.WEBCAM, hardwareMap, camera1X, camera1Y, camera2X, camera2Y, 45, 18);
+        camera.init(EasyOpenCVImportable.CameraType.WEBCAM, hardwareMap, camera1X, camera1Y, camera2X, camera2Y, 18, 18);
 
         // initializes slamra
         Pose2d startingPose = new Pose2d(new Translation2d(startingPoseX * 0.0254, startingPoseY * 0.0254), new Rotation2d(0));
         setupCamera(hardwareMap, startingPose);
         sleep(5000);
         startCamera();
+
+        // passes hardware to slamra class
+        DcMotor[] motors = {fr, rr, rl, fl};
+        slauto.setUp(motors, telemetry);
 
         telemetry.addLine("Cameras Done");
         telemetry.update();
@@ -120,26 +127,23 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
 
         while (!isStarted()) {
             // loops this until start is pressed
-            elementPosition = getElementPosition(0);
+            elementPosition = getElementPosition(10);
             packet.put("Position", elementPosition);
             dashboard.sendTelemetryPacket(packet);
             telemetry.addData("Position", elementPosition);
             telemetry.update();
         }
-        //camera.stopDetection();
-
-        // passes hardware to slamra class
-        DcMotor[] motors = {fr, rr, rl, fl};
-        slauto.setUp(motors, telemetry);
 
         packet.addLine("program started");
         dashboard.sendTelemetryPacket(packet);
+
+        timer.reset();
     }
 
     // Function which pushes the robot spinner into the wall, before running it. True = red
     public void setSpinny(boolean redSide, int timeout) {
         if (redSide) { // red
-            slauto.drive(65, -60, -90, 0.5, timeout, this, false, false);
+            slauto.drive(65, -60, -90, 0.3, timeout, this, false, true);
             spinner.setPower(-0.8);
             sleep(4000);
             spinner.setPower(0);
