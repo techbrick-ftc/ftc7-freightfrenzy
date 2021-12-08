@@ -7,10 +7,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.libs.AutoImport;
 
-@Autonomous(name="RedAutoWarehouse", group="teleop")
-public class RedAutoWarehouse extends AutoImport {
+@Autonomous(name="RedAutoWarehouseDeep", group="teleop")
+public class RedAutoWarehouseDeep extends AutoImport {
 
-    public RedAutoWarehouse() { super(65, 5, 75, 170, 173, 170); } // change
+    public RedAutoWarehouseDeep() { super(65, 5, 75, 170, 173, 170); } // change
 
     public void runOpMode() {
         super.runOpMode();
@@ -32,7 +32,8 @@ public class RedAutoWarehouse extends AutoImport {
             // Goes into the warehouse
             slauto.drive(60, 0, 0, 0.5, 0, this, false, true);
             slauto.drive(65, 15, 0, 0.75, 3000, this, false, false);
-            slauto.drive(65, 30, 0, 0.75, 3000, this, false, false);
+            slauto.drive(65, 30, 0, 0.75, 3000, this, true, false);
+            slauto.drive(40, 30, 0, 0.75, this);
 
             // Lowers arm
             setArm(0, 1);
