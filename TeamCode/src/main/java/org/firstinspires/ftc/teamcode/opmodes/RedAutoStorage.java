@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.libs.AutoImport;
 
-@Autonomous(name="RedAutoStorage", group="teleop")
+@Autonomous(name="RedAutoStorage", group="redAuto")
 public class RedAutoStorage extends AutoImport {
 
     public RedAutoStorage() { super(65, -40, 75, 170, 173, 170); }
@@ -45,9 +45,9 @@ public class RedAutoStorage extends AutoImport {
             }
 
             // Goes into the warehouse
-            packet.put("zooming", "commenced");
-            dashboard.sendTelemetryPacket(packet);
-            slauto.drive(47, 40, 0, 0.8, this);
+            slauto.drive(60, 0, 0, 0.5, 0, this, false, true);
+            slauto.drive(65, 15, 0, 0.75, 3000, this, false, false);
+            slauto.drive(65, 35, 0, 0.75, 3000, this, false, false);
 
             // Lowers arm
             setArm(0, 1);

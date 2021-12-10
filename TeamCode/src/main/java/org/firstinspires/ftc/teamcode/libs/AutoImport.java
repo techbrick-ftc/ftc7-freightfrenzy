@@ -83,7 +83,6 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
         armX.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armY = hardwareMap.get(DcMotor.class, "armY");
         armY.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //armY.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         intake = hardwareMap.get(DcMotor.class, "intake");
         hatch = hardwareMap.get(Servo.class, "hatch");
@@ -104,7 +103,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
         // initializes slamra
         Pose2d startingPose = new Pose2d(new Translation2d(startingPoseX * 0.0254, startingPoseY * 0.0254), new Rotation2d(0));
         setupCamera(hardwareMap, startingPose);
-        sleep(5000);
+        sleep(1000);
         startCamera();
 
         // passes hardware to slamra class
@@ -149,7 +148,10 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
             spinner.setPower(0);
 
         } else { // blue
-
+            slauto.drive(65, 60, 0, 0.3, timeout, this, false, true);
+            spinner.setPower(0.8);
+            sleep(4000);
+            spinner.setPower(0);
         }
     }
 

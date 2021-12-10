@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.libs.AutoImport;
 
-@Autonomous(name="RedAutoWarehouse", group="teleop")
+@Autonomous(name="RedAutoWarehouse", group="redAuto")
 public class RedAutoWarehouse extends AutoImport {
 
     public RedAutoWarehouse() { super(65, 5, 75, 170, 173, 170); } // change

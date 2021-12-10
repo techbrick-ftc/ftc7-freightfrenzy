@@ -7,33 +7,36 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.libs.AutoImport;
 
-@Autonomous(name="RedAutoWarehouseDeep", group="redAuto")
-public class RedAutoWarehouseDeep extends AutoImport {
+@Autonomous(name="BlueAutoStorageLocal", group="blueAuto")
+public class BlueAutoStorageLocal extends AutoImport {
 
-    public RedAutoWarehouseDeep() { super(65, 5, 75, 170, 173, 170); } // change
+    public BlueAutoStorageLocal() { super(65,  27, 75, 170, 173, 170); }
 
     public void runOpMode() {
         super.runOpMode();
 
         if (opModeIsActive()) {
+            // Goes to spinner and does spinny
+            slauto.drive(50, 60, 0, 0.75, this);
+            setSpinny(false, 1000);
+
             // Goes to the shipping hub and delivers based on the team element position
             // 1 is added to elementPosition because height's 0 is ground level, not the first layer
             setArm(elementPosition + 1, 1);
             sleep(1000);
-            slauto.drive(47, -14, 0, 0.75, this);
+            slauto.drive(25, 60, 90, 0.75, 0, this, false, true);
+            slauto.drive(25, 33, 90, 0.75, 0, this, true, false);
             deposit(true);
             sleep(1000);
             //runIntake(1, 1000);
             //sleep(1000);
-            slauto.drive(49, -14, 0, 1, 0, this, false, false);
-            slauto.drive(47, -14, 0, 1, 0, this, false, false);
+            slauto.drive(25, 35, 90, 1, 0, this, false, false);
+            slauto.drive(25, 33, 90, 1, 0, this, false, false);
             deposit(false);
 
-            // Goes into the warehouse
-            slauto.drive(60, 0, 0, 0.5, 0, this, false, true);
-            slauto.drive(65, 15, 0, 0.75, 3000, this, false, false);
-            slauto.drive(65, 30, 0, 0.75, 3000, this, true, false);
-            slauto.drive(40, 30, 0, 0.75, this);
+            // Parks in storage
+            slauto.drive(23, 55, 0, 0.75, this);
+            slauto.drive(39, 60, 0, 0.75, this);
 
             // Lowers arm
             setArm(0, 1);

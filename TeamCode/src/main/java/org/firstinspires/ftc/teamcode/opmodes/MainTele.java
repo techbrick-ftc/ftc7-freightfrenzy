@@ -54,8 +54,6 @@ public class MainTele extends AutoImport {
         // Set up variables
         boolean intaking = false;
         boolean outtaking = false;
-        boolean isSpinningForth = false;
-        boolean isSpinningBack = false;
         boolean hatchOpen = false;
         double armXMin = -0.5;
         double armXMax = 0.5;
@@ -160,28 +158,12 @@ public class MainTele extends AutoImport {
             }
 
             // Toggles spinner
-            if (cur2.a && !prev2.a) {
-                if (!isSpinningForth) {
-                    spinner.setPower(1);
-                    isSpinningForth = true;
-                    isSpinningBack = false;
-                }
-                else {
-                    spinner.setPower(0);
-                    isSpinningForth = false;
-                    isSpinningBack = false;
-                }
-            } else if (cur2.x && !prev2.x) {
-                if (!isSpinningBack) {
-                    spinner.setPower(-1);
-                    isSpinningForth = false;
-                    isSpinningBack = true;
-                }
-                else {
-                    spinner.setPower(0);
-                    isSpinningForth = false;
-                    isSpinningBack = false;
-                }
+            if (gamepad2.a) {
+                spinner.setPower(1);
+            } else if (gamepad2.x) {
+                spinner.setPower(-1);
+            } else {
+                spinner.setPower(0);
             }
 
             // Reset Field Centric button
