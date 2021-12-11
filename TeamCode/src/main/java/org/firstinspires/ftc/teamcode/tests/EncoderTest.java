@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.tests;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
@@ -11,7 +12,8 @@ import org.firstinspires.ftc.teamcode.libs.AutoImport;
 import org.firstinspires.ftc.teamcode.libs.FieldCentric;
 import org.firstinspires.ftc.teamcode.libs.Globals;
 
-@TeleOp(name="EncoderTest", group="teleop")
+@Disabled
+@TeleOp(name="EncoderTest", group="test")
 public class EncoderTest extends AutoImport{
     public EncoderTest() { super(31, -56, 225, 150, 255, 150); }
 

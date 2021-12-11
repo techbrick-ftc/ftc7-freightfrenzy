@@ -51,7 +51,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected int camera1Y;
     protected int camera2X;
     protected int camera2Y;
-    protected int[] armYPositions = {0, -1930, -2800, -3700};
+    protected int[] armYPositions = {0, -1930, -2800, -3700, -4000};
 
     public AutoImport(int startX, int startY, int cam1X, int cam1Y, int cam2X, int cam2Y) {
         startingPoseX = startX;

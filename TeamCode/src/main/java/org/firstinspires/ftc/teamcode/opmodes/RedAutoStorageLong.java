@@ -3,11 +3,13 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import static org.firstinspires.ftc.teamcode.libs.Globals.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.libs.AutoImport;
 import org.firstinspires.ftc.teamcode.libs.Globals;
 
+@Disabled
 @Autonomous(name="RedAutoStorageLong", group="redAuto")
 public class RedAutoStorageLong extends AutoImport {
 

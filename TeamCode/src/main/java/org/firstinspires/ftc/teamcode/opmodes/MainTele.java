@@ -52,6 +52,7 @@ public class MainTele extends AutoImport {
         Gamepad cur2 = new Gamepad();
 
         // Set up variables
+        boolean speedy = true;
         boolean intaking = false;
         boolean outtaking = false;
         boolean hatchOpen = false;
@@ -74,8 +75,30 @@ public class MainTele extends AutoImport {
                 idle();
             }
 
-            // Gives FieldCentric the stick positions
-            drive.Drive(gamepad1.left_stick_x, -gamepad1.left_stick_y, Range.clip(-gamepad1.right_stick_x, -0.75, 0.75));
+            // Gives FieldCentric the stick positions based off of speed setting
+            if (cur1.b && !prev1.b ) {
+                if (!speedy) {
+                    speedy = true;
+                    telemetry.addLine("Speedy: On");
+                } else if (speedy){
+                    speedy = false;
+                    telemetry.addLine("Speedy: Off");
+                }
+                telemetry.update();
+            }
+            if (!speedy) {
+                drive.Drive(
+                        Range.clip(gamepad1.left_stick_x, -0.55, 0.55),
+                        Range.clip(-gamepad1.left_stick_y, -0.5, 0.5),
+                        Range.clip(-gamepad1.right_stick_x, -0.25, 0.25));
+
+            } else {
+                drive.Drive(
+                        Range.clip(gamepad1.left_stick_x, -0.95, 0.95),
+                        -gamepad1.left_stick_y,
+                        Range.clip(-gamepad1.right_stick_x, -0.75, 0.75));
+
+            }
 
             // Controls arm horizontal axis
             // Enforces encoder barriers at 90 and -90 degrees of starting position horizontally
@@ -95,7 +118,7 @@ public class MainTele extends AutoImport {
 
             // Controls arm vertical axis
             // Increments vertical position each dpad input
-            if (cur2.dpad_up && !prev2.dpad_up && (armYSetting < 3)) {
+            if (cur2.dpad_up && !prev2.dpad_up && (armYSetting < 4)) {
                 armYSetting++;
                 armY.setTargetPosition(armYPositions[armYSetting]);
                 armY.setMode(DcMotor.RunMode.RUN_TO_POSITION);

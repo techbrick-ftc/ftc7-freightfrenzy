@@ -47,7 +47,7 @@ public class BlueAutoStorageRamp extends AutoImport {
             // Goes into the warehouse
             packet.put("zooming", "commenced");
             dashboard.sendTelemetryPacket(packet);
-            slauto.drive(47, -40, 0, 0.8, this);
+            slauto.drive(47, -40, 0, 1, this);
 
             // Lowers arm
             setArm(0, 1);
