@@ -10,14 +10,14 @@ import org.firstinspires.ftc.teamcode.libs.AutoImport;
 @Autonomous(name="RedAutoStorageRamp", group="redAuto")
 public class RedAutoStorageRamp extends AutoImport {
 
-    public RedAutoStorageRamp() { super(65, -40, 75, 170, 173, 170); }
+    public RedAutoStorageRamp() { super(60, -35, 75, 170, 173, 170); }
 
     public void runOpMode() {
         super.runOpMode();
 
         if (opModeIsActive()) {
             // Goes to spinner and does spinny
-            slauto.drive(50, -60, -90, 0.75, this);
+            slauto.drive(50, -60, -90, 0.75, 4000, this, true, true);
             setSpinny(true, 1000);
 
             // Goes to the shipping hub and delivers based on the team element position
@@ -39,8 +39,11 @@ public class RedAutoStorageRamp extends AutoImport {
             setArm(3, 1);
             slauto.drive(47, -57, 0, 0.75, 0, this, true, false);
 
+            // gains clearance
+            setArm(5, 1);
+
             // Waits for other team before moving
-            while (timer.seconds() < 24) {
+            while (timer.seconds() < 20) {
                 sleep(10);
             }
 

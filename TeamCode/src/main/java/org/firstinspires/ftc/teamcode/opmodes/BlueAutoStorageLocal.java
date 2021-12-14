@@ -17,7 +17,7 @@ public class BlueAutoStorageLocal extends AutoImport {
 
         if (opModeIsActive()) {
             // Goes to spinner and does spinny
-            slauto.drive(50, 60, 0, 0.75, this);
+            slauto.drive(50, 60, 0, 0.75, 4000, this, true, true);
             setSpinny(false, 1000);
 
             // Goes to the shipping hub and delivers based on the team element position

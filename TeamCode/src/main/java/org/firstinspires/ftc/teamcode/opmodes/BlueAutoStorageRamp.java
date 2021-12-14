@@ -17,7 +17,7 @@ public class BlueAutoStorageRamp extends AutoImport {
 
         if (opModeIsActive()) {
             // Goes to spinner and does spinny
-            slauto.drive(50, 60, 0, 0.75, this);
+            slauto.drive(50, 60, 0, 0.75, 4000, this, true, true);
             setSpinny(false, 1000);
 
             // Goes to the shipping hub and delivers based on the team element position
@@ -39,10 +39,16 @@ public class BlueAutoStorageRamp extends AutoImport {
             setArm(3, 1);
             slauto.drive(47, 57, 0, 0.75, 0, this, true, false);
 
+            // gains clearance
+            setArm(5, 1);
+
             // Waits for other team before moving
-            while (timer.seconds() < 24) {
+            while (timer.seconds() < 20) {
                 sleep(10);
             }
+
+            // gains clearance
+            setArm(5, 1);
 
             // Goes into the warehouse
             packet.put("zooming", "commenced");

@@ -13,14 +13,14 @@ import org.firstinspires.ftc.teamcode.libs.Globals;
 @Autonomous(name="RedAutoStorageLong", group="redAuto")
 public class RedAutoStorageLong extends AutoImport {
 
-    public RedAutoStorageLong() { super(65, -40, 75, 170, 173, 170); }
+    public RedAutoStorageLong() { super(60, -35, 75, 170, 173, 170); }
 
     public void runOpMode() {
         super.runOpMode();
 
         if (opModeIsActive()) {
             // Goes to spinner and does spinny
-            slauto.drive(50, -60, -90, 0.75, this);
+            slauto.drive(50, -60, -90, 0.75, 4000, this, true, true);
             setSpinny(true, 1000);
 
             // Goes to the shipping hub and delivers based on the team element position
