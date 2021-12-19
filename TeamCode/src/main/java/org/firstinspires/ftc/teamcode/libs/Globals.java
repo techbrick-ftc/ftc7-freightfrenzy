@@ -25,6 +25,7 @@ import com.spartronics4915.lib.T265Camera;
 public class Globals {
     private static T265Camera camera;
     private static BNO055IMU imu;
+    private static BNO055IMU imu2;
 
     public static void setupCamera(HardwareMap hardwareMap, Pose2d pose2d) {
         System.out.println("***setting up t265");
@@ -41,9 +42,16 @@ public class Globals {
             BNO055IMU.Parameters params = new BNO055IMU.Parameters();
             imu.initialize(params);
         }
+
+        if (imu2 == null) {
+            imu2 = hardwareMap.get(BNO055IMU .class, "imuII");
+            BNO055IMU.Parameters params = new BNO055IMU.Parameters();
+            imu2.initialize(params);
+        }
     }
 
     public static BNO055IMU getImu() { return imu; }
+    public static BNO055IMU getImu2() { return imu2; }
     public static T265Camera getCamera() { return camera; }
 
     public static void startCamera() {

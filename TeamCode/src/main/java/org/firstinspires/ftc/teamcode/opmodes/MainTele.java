@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import static org.firstinspires.ftc.teamcode.libs.Globals.*;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
@@ -8,6 +10,9 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.libs.AutoImport;
 import org.firstinspires.ftc.teamcode.libs.FieldCentric;
 import org.firstinspires.ftc.teamcode.libs.Globals;
@@ -56,9 +61,13 @@ public class MainTele extends AutoImport {
         boolean intaking = false;
         boolean outtaking = false;
         boolean hatchOpen = false;
-        double armXMin = -0.5;
-        double armXMax = 0.5;
+        double armXMin = -0.8;
+        double armXMax = 0.8;
         int armYSetting = 0;
+        double robotAngle = getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        double armYAngle = getImu2().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
+        double armXAngle = getImu2().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        double armXToRobot = wrap(armXAngle - robotAngle);
 
         // Starting servo & motor positions
 
@@ -74,6 +83,12 @@ public class MainTele extends AutoImport {
                 dashboard.sendTelemetryPacket(packet);
                 idle();
             }
+
+            // Gets IMUs
+            robotAngle = getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+            armYAngle = getImu2().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
+            armXAngle = getImu2().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+            armXToRobot = wrap(armXAngle - robotAngle);
 
             // Gives FieldCentric the stick positions based off of speed setting
             if (cur1.b && !prev1.b ) {
@@ -101,16 +116,16 @@ public class MainTele extends AutoImport {
             }
 
             // Controls arm horizontal axis
-            // Enforces encoder barriers at 90 and -90 degrees of starting position horizontally
-            if (armX.getCurrentPosition() >= 1500) { // constant is ~1/4 of full encoder rotation
-                armXMax = 0;
-                armXMin = -0.5;
-            } else if (armX.getCurrentPosition() <= -1500) {
-                armXMax = 0.5;
+            // Enforces imu barriers at 90 and -90 degrees of starting position horizontally
+            if (armXToRobot >= 90) {
+                armXMax = 0.8;
                 armXMin = 0;
+            } else if (armXToRobot <= -90) {
+                armXMax = 0;
+                armXMin = -0.8;
             } else {
-                armXMax = 0.5;
-                armXMin = -0.5;
+                armXMax = 0.8;
+                armXMin = -0.8;
             }
 
             double armXPower = Range.clip(gamepad2.right_stick_x, armXMin, armXMax);
@@ -118,7 +133,7 @@ public class MainTele extends AutoImport {
 
             // Controls arm vertical axis
             // Increments vertical position each dpad input
-            if (cur2.dpad_up && !prev2.dpad_up && (armYSetting < 4)) {
+            if (cur2.dpad_up && !prev2.dpad_up && (armYSetting < 3)) {
                 armYSetting++;
                 armY.setTargetPosition(armYPositions[armYSetting]);
                 armY.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -141,10 +156,10 @@ public class MainTele extends AutoImport {
             }
 
             // Resets arm encs if touch is pressed
-            if (armBoundaryMin.isPressed()) {
+            /*if (armBoundaryMin.isPressed()) {
                 resetEnc(armX);
                 resetEnc(armY);
-            }
+            }*/
 
             // Toggles intake
             if (cur2.right_bumper && !prev2.right_bumper) {
@@ -206,6 +221,10 @@ public class MainTele extends AutoImport {
 
             // Send FTC Dashboard Packets
             packet.put("loop count", loops);
+            packet.put("armXAngle", armXAngle);
+            packet.put("armYAngle", armYAngle);
+            packet.put("robotAngle", robotAngle);
+            packet.put("armXToRobot", armXToRobot);
             packet.put("fr power", fr.getPower());
             packet.put("fl power", fl.getPower());
             packet.put("rr power", rr.getPower());

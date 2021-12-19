@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.libs.AutoImport;
 @Autonomous(name="BlueAutoWarehouse", group="blueAuto")
 public class BlueAutoWarehouse extends AutoImport {
 
-    public BlueAutoWarehouse() { super(65, -17, 60, 170, 158, 170); } // change
+    public BlueAutoWarehouse() { super(65, -17, 72, 215, 160, 215); } // change
 
     public void runOpMode() {
         super.runOpMode();

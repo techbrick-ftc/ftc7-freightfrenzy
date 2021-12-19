@@ -3,6 +3,8 @@
 package org.firstinspires.ftc.teamcode.libs;
 import static org.firstinspires.ftc.teamcode.libs.Globals.*;
 
+import static java.lang.Math.abs;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.geometry.Pose2d;
@@ -20,6 +22,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.libs.SimpleSlamra;
+
+import java.util.concurrent.CompletableFuture;
 
 public class AutoImport extends LinearOpMode implements TeleAuto {
     // Defines vars
@@ -51,7 +55,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected int camera1Y;
     protected int camera2X;
     protected int camera2Y;
-    protected int[] armYPositions = {0, -1930, -2800, -3800, -4000, -4500};
+    protected int[] armYPositions = {-35, -65, -85, -115};
 
     public AutoImport(int startX, int startY, int cam1X, int cam1Y, int cam2X, int cam2Y) {
         startingPoseX = startX;
@@ -178,6 +182,20 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
         }
     }
 
+    // Function which uses the IMU to drive a motor
+    public void driveUsingIMU(double targetDegree, double imuAngle, double speed, DcMotor motor) {
+        CompletableFuture.runAsync(() -> {
+            double direction = 1;
+            direction = (targetDegree - imuAngle); // this is not complete yet
+
+            motor.setPower(speed * direction);
+            while (abs(targetDegree) > abs(imuAngle) ) {
+                sleep(10);
+            }
+            motor.setPower(0);
+        });
+    }
+
     // Function which uses the webcam to return the team element's position
     public int getElementPosition(long delay) {
         sleep(delay);
@@ -191,6 +209,18 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
         while (motor.getCurrentPosition() != 0) {
             sleep(10);
         }
+    }
+
+    public double wrap(double theta) {
+        double newTheta = theta;
+        while(abs(newTheta) > 180) {
+            if (newTheta < -180) {
+                newTheta += 360;
+            } else {
+                newTheta -= 360;
+            }
+        }
+        return newTheta;
     }
 }
 
