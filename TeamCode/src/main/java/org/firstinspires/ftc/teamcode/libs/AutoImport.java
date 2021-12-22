@@ -11,6 +11,7 @@ import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.geometry.Transform2d;
 import com.arcrobotics.ftclib.geometry.Translation2d;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -21,6 +22,9 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.libs.SimpleSlamra;
 
 import java.util.concurrent.CompletableFuture;
@@ -35,9 +39,10 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected DcMotor armY = null;
     protected DcMotor intake = null;
     protected Servo hatch = null;
+    protected Servo fork = null;
     protected CRServo spinner = null;
 
-    protected TouchSensor armBoundaryMin = null;
+    //protected TouchSensor armBoundaryMin = null;
 
     protected SimpleSlamra slauto = new SimpleSlamra();
     protected EasyOpenCVImportable camera = new EasyOpenCVImportable();
@@ -56,6 +61,9 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected int camera2X;
     protected int camera2Y;
     protected int[] armYPositions = {-35, -65, -85, -115};
+
+    // private vars
+    double targetAngle;
 
     public AutoImport(int startX, int startY, int cam1X, int cam1Y, int cam2X, int cam2Y) {
         startingPoseX = startX;
@@ -90,10 +98,11 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
 
         intake = hardwareMap.get(DcMotor.class, "intake");
         hatch = hardwareMap.get(Servo.class, "hatch");
+        fork = hardwareMap.get(Servo.class, "fork");
 
         spinner = hardwareMap.get(CRServo.class, "spinner");
 
-        armBoundaryMin = hardwareMap.get(TouchSensor.class, "touch");
+        //armBoundaryMin = hardwareMap.get(TouchSensor.class, "touch");
 
         // initializes imu
         setupIMU(hardwareMap);
@@ -183,15 +192,25 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     }
 
     // Function which uses the IMU to drive a motor
-    public void driveUsingIMU(double targetDegree, double imuAngle, double speed, DcMotor motor) {
-        CompletableFuture.runAsync(() -> {
-            double direction = 1;
-            direction = (targetDegree - imuAngle); // this is not complete yet
+    // speed must be greater than 0!
+    public void driveUsingIMU(double targetDegree, double speed, DcMotor motor, BNO055IMU imu){
+        targetAngle = targetDegree;
 
-            motor.setPower(speed * direction);
-            while (abs(targetDegree) > abs(imuAngle) ) {
-                sleep(10);
-            }
+        CompletableFuture.runAsync(() -> {
+            double imuDegree;
+            double diffDegree;
+            do {
+                imuDegree = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
+                diffDegree = targetDegree - imuDegree;
+
+                // gets a double, being 1 or -1 based on direction the motor needs to go
+                double direction = (diffDegree) / abs(diffDegree);
+
+                // sets the motor to the speed, in the probably correct direction
+                motor.setPower(speed * direction);
+
+                sleep(50);
+            } while (abs(diffDegree) > 1 && opModeIsActive() && targetDegree == targetAngle);
             motor.setPower(0);
         });
     }

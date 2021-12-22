@@ -68,6 +68,8 @@ public class MainTele extends AutoImport {
         double armYAngle = getImu2().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
         double armXAngle = getImu2().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
         double armXToRobot = wrap(armXAngle - robotAngle);
+        double forkRange = 0;
+        double armYRange = 0;
 
         // Starting servo & motor positions
 
@@ -135,31 +137,25 @@ public class MainTele extends AutoImport {
             // Increments vertical position each dpad input
             if (cur2.dpad_up && !prev2.dpad_up && (armYSetting < 3)) {
                 armYSetting++;
-                armY.setTargetPosition(armYPositions[armYSetting]);
+                driveUsingIMU(armYPositions[armYSetting], 1, armY, getImu2());
+                /*armY.setTargetPosition(armYPositions[armYSetting]);
                 armY.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armY.setPower(1);
+                armY.setPower(1);*/
             } else if (cur2.dpad_down && !prev2.dpad_down && (armYSetting > 0)) {
                 armYSetting--;
-                armY.setTargetPosition(armYPositions[armYSetting]);
+                driveUsingIMU(armYPositions[armYSetting], 1, armY, getImu2());
+                /*armY.setTargetPosition(armYPositions[armYSetting]);
                 armY.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armY.setPower(1);
-            }
-            if (!armY.isBusy()) {
-                armY.setPower(0);
-            }
-
-            // Manual control for armY
-            if (gamepad2.left_stick_button && !armBoundaryMin.isPressed()) {
+                armY.setPower(1);*/
+            } else if (gamepad2.left_stick_button) {
+                // Manual control for armY
                 armY.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 double armYPower = gamepad2.left_stick_y;
                 armY.setPower(armYPower);
             }
 
-            // Resets arm encs if touch is pressed
-            /*if (armBoundaryMin.isPressed()) {
-                resetEnc(armX);
-                resetEnc(armY);
-            }*/
+            // Controls fork servo
+            armYRange = armYAngle / 180;
 
             // Toggles intake
             if (cur2.right_bumper && !prev2.right_bumper) {
