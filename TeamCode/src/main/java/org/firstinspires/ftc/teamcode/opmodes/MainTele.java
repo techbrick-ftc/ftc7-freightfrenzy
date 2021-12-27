@@ -138,24 +138,21 @@ public class MainTele extends AutoImport {
             if (cur2.dpad_up && !prev2.dpad_up && (armYSetting < 3)) {
                 armYSetting++;
                 driveUsingIMU(armYPositions[armYSetting], 1, armY, getImu2());
-                /*armY.setTargetPosition(armYPositions[armYSetting]);
-                armY.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armY.setPower(1);*/
             } else if (cur2.dpad_down && !prev2.dpad_down && (armYSetting > 0)) {
                 armYSetting--;
                 driveUsingIMU(armYPositions[armYSetting], 1, armY, getImu2());
-                /*armY.setTargetPosition(armYPositions[armYSetting]);
-                armY.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armY.setPower(1);*/
             } else if (gamepad2.left_stick_button) {
                 // Manual control for armY
-                armY.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                if (isAsyncing) {abortAsync = true;}
                 double armYPower = gamepad2.left_stick_y;
                 armY.setPower(armYPower);
+            } else if (!isAsyncing) {
+                armY.setPower(0);
             }
 
             // Controls fork servo
             armYRange = armYAngle / 180;
+            fork.setPosition(1 - armYRange);
 
             // Toggles intake
             if (cur2.right_bumper && !prev2.right_bumper) {

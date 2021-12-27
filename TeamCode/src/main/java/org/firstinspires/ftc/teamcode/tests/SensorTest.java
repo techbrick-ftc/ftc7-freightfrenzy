@@ -1,29 +1,28 @@
 package org.firstinspires.ftc.teamcode.tests;
 
+import static org.firstinspires.ftc.teamcode.libs.Globals.*;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorRangeSensor;
-import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.libs.AutoImport;
-@TeleOp(name = "SensorTest", group = "test")
+
+@TeleOp(name="SensorTest", group="test")
 public class SensorTest extends AutoImport {
-    ColorRangeSensor colorRange;
 
     public SensorTest() { super(0, 0, 0, 0, 0, 0); }
 
-    @Override
     public void runOpMode() {
-        // Get the color sensor from hardwareMap
-        colorRange = hardwareMap.get(ColorRangeSensor.class, "ColorRange");
+        super.runOpMode();
 
-        // Wait for the Play button to be pressed
-        waitForStart();
-
-        // While the Op Mode is running, update the telemetry values.
-        while (opModeIsActive()) {
-            telemetry.addData("LightAmount", colorRange.getLightDetected());
-
-            telemetry.update();
+        if (opModeIsActive()) {
+            while (opModeIsActive()) {
+                packet.put("LightAmount", colorRange.getLightDetected());
+                packet.put("is detecting", colorRange.getLightDetected() > 0.1);
+                dashboard.sendTelemetryPacket(packet);
+            }
         }
     }
 }
+
+

@@ -20,6 +20,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -42,7 +44,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected Servo fork = null;
     protected CRServo spinner = null;
 
-    //protected TouchSensor armBoundaryMin = null;
+    protected ColorRangeSensor colorRange = null;
 
     protected SimpleSlamra slauto = new SimpleSlamra();
     protected EasyOpenCVImportable camera = new EasyOpenCVImportable();
@@ -60,7 +62,9 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected int camera1Y;
     protected int camera2X;
     protected int camera2Y;
-    protected int[] armYPositions = {-35, -65, -85, -115};
+    protected int[] armYPositions = {-40, -65, -85, -115};
+    protected boolean isAsyncing = false;
+    protected boolean abortAsync = false;
 
     // private vars
     double targetAngle;
@@ -102,7 +106,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
 
         spinner = hardwareMap.get(CRServo.class, "spinner");
 
-        //armBoundaryMin = hardwareMap.get(TouchSensor.class, "touch");
+        colorRange = hardwareMap.get(ColorRangeSensor.class, "colorRange");
 
         // initializes imu
         setupIMU(hardwareMap);
@@ -134,6 +138,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
 
         // sets servos to starting positions
         hatch.setPosition(1);
+        fork.setPosition(1);
 
         camera.startDetection();
 
@@ -194,11 +199,20 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     // Function which uses the IMU to drive a motor
     // speed must be greater than 0!
     public void driveUsingIMU(double targetDegree, double speed, DcMotor motor, BNO055IMU imu){
+        abortAsync = false;
         targetAngle = targetDegree;
 
         CompletableFuture.runAsync(() -> {
+            // Ensures theres no more than one thread at any given time
+            while (isAsyncing) {
+                sleep(50);
+            }
+
+            isAsyncing = true;
             double imuDegree;
             double diffDegree;
+
+            // Moves motor
             do {
                 imuDegree = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
                 diffDegree = targetDegree - imuDegree;
@@ -210,8 +224,9 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
                 motor.setPower(speed * direction);
 
                 sleep(50);
-            } while (abs(diffDegree) > 1 && opModeIsActive() && targetDegree == targetAngle);
+            } while ((abs(diffDegree) > 2 && opModeIsActive() && targetDegree == targetAngle) && !abortAsync);
             motor.setPower(0);
+            isAsyncing = false;
         });
     }
 
