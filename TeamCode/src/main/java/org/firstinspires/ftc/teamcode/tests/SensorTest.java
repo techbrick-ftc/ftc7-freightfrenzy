@@ -1,3 +1,9 @@
+/*
+yellow: > 0.12
+white : > 0.13
+none  : > 0.09
+*/
+
 package org.firstinspires.ftc.teamcode.tests;
 
 import static org.firstinspires.ftc.teamcode.libs.Globals.*;
@@ -18,7 +24,7 @@ public class SensorTest extends AutoImport {
         if (opModeIsActive()) {
             while (opModeIsActive()) {
                 packet.put("LightAmount", colorRange.getLightDetected());
-                packet.put("is detecting", colorRange.getLightDetected() > 0.1);
+                packet.put("is detecting", colorRange.getLightDetected() > 0.11);
                 dashboard.sendTelemetryPacket(packet);
             }
         }

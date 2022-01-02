@@ -1,4 +1,5 @@
-// Our parent auto program, which is used in other auto programs.
+// abdominal planet
+// Our parent auto program, which is used in other auto programs for init and stuff.
 
 package org.firstinspires.ftc.teamcode.libs;
 import static org.firstinspires.ftc.teamcode.libs.Globals.*;
@@ -45,6 +46,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected CRServo spinner = null;
 
     protected ColorRangeSensor colorRange = null;
+    protected DcMotor intakeLight = null;
 
     protected SimpleSlamra slauto = new SimpleSlamra();
     protected EasyOpenCVImportable camera = new EasyOpenCVImportable();
@@ -107,6 +109,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
         spinner = hardwareMap.get(CRServo.class, "spinner");
 
         colorRange = hardwareMap.get(ColorRangeSensor.class, "colorRange");
+        intakeLight = hardwareMap.get(DcMotor.class, "light");
 
         // initializes imu
         setupIMU(hardwareMap);

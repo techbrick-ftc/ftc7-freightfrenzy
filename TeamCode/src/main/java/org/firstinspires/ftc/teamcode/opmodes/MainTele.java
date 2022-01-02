@@ -65,11 +65,13 @@ public class MainTele extends AutoImport {
         double armXMax = 0.8;
         int armYSetting = 0;
         double robotAngle = getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-        double armYAngle = getImu2().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
+        double armYAngle = getImu2().getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
         double armXAngle = getImu2().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
         double armXToRobot = wrap(armXAngle - robotAngle);
         double forkRange = 0;
         double armYRange = 0;
+        double forkConst = 0;
+        boolean forkUp = false;
 
         // Starting servo & motor positions
 
@@ -88,7 +90,7 @@ public class MainTele extends AutoImport {
 
             // Gets IMUs
             robotAngle = getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-            armYAngle = getImu2().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
+            armYAngle = getImu2().getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
             armXAngle = getImu2().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
             armXToRobot = wrap(armXAngle - robotAngle);
 
@@ -151,8 +153,21 @@ public class MainTele extends AutoImport {
             }
 
             // Controls fork servo
-            armYRange = armYAngle / 180;
-            fork.setPosition(1 - armYRange);
+            if (cur2.y && !prev2.y && !forkUp) {
+                forkConst = -0.40;
+                forkUp = true;
+            } else if (cur2.y && !prev2.y && forkUp) {
+                forkConst = 0;
+                forkUp = false;
+            }
+
+            // Transposes 0 to -180 into -1 to 1. This is unneeded for servos configured 0 to 1
+            // armYRange = (Math.abs(armYAngle) / 90) - 1;
+
+            // Transposes 0 to -180 into 0 to 1
+            armYRange = Math.abs(armYAngle) / 215; // not divided by 180 to correct for inconsistencies in the fork servo configuration
+            forkRange = (1 - armYRange) + forkConst;
+            fork.setPosition(forkRange);
 
             // Toggles intake
             if (cur2.right_bumper && !prev2.right_bumper) {
@@ -197,6 +212,13 @@ public class MainTele extends AutoImport {
                 spinner.setPower(0);
             }
 
+            // Activates light if something is in intake
+            if (colorRange.getLightDetected() > 0.11) {
+                intakeLight.setPower(1);
+            } else {
+                intakeLight.setPower(0);
+            }
+
             // Reset Field Centric button
             if (cur1.a && !prev1.a) {
                 drive.newOffset();
@@ -230,6 +252,9 @@ public class MainTele extends AutoImport {
             packet.put("armYSetting", armYSetting);
             packet.put("intakeControl", cur2.right_bumper);
             packet.put("intakePower", intake.getPower());
+            packet.put("zArmRange", armYRange);
+            packet.put("zAttemptForkRange", forkRange);
+            packet.put("zActualForkRange", fork.getPosition());
             dashboard.sendTelemetryPacket(packet);
 
             loops++;
