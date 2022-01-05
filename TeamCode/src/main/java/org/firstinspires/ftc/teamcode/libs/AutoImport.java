@@ -31,6 +31,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.libs.SimpleSlamra;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class AutoImport extends LinearOpMode implements TeleAuto {
     // Defines vars
@@ -65,11 +67,10 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected int camera2X;
     protected int camera2Y;
     protected int[] armYPositions = {-40, -65, -85, -115};
-    protected boolean isAsyncing = false;
-    protected boolean abortAsync = false;
 
-    // private vars
-    double targetAngle;
+    protected AtomicBoolean isAsyncing = new AtomicBoolean(false);
+    protected AtomicBoolean abortAsync = new AtomicBoolean(false);
+    protected AtomicInteger targetDegree = new AtomicInteger();
 
     public AutoImport(int startX, int startY, int cam1X, int cam1Y, int cam2X, int cam2Y) {
         startingPoseX = startX;
@@ -178,9 +179,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
 
     // Function which raises the arm to the required shipping hub positions
     public void setArm(int height, double power) {
-        armY.setTargetPosition(armYPositions[height]);
-        armY.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armY.setPower(power);
+        driveUsingIMU(armYPositions[height], power, armY, getImu2());
     }
 
     // Function which runs the intake for a certain period of time. -1 = intake, 1 = outtake
@@ -202,35 +201,36 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     // Function which uses the IMU to drive a motor
     // speed must be greater than 0!
     public void driveUsingIMU(double targetDegree, double speed, DcMotor motor, BNO055IMU imu){
-        abortAsync = false;
-        targetAngle = targetDegree;
+        //abortAsync.set(false);
 
-        CompletableFuture.runAsync(() -> {
-            // Ensures theres no more than one thread at any given time
-            while (isAsyncing) {
-                sleep(50);
-            }
+        // Uses an atomic class variable to hold any targetDegree parameters, required to update
+        // it in an existing thread.
+        this.targetDegree.set((int)targetDegree);
 
-            isAsyncing = true;
-            double imuDegree;
-            double diffDegree;
+        // Starts the thread if it isn't running.
+        if (!isAsyncing.get()) {
+            CompletableFuture.runAsync(() -> {
+                isAsyncing.set(true);
+                double imuDegree;
+                double diffDegree;
 
-            // Moves motor
-            do {
-                imuDegree = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
-                diffDegree = targetDegree - imuDegree;
+                // Moves motor
+                do {
+                    imuDegree = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
+                    diffDegree = this.targetDegree.get() - imuDegree;
 
-                // gets a double, being 1 or -1 based on direction the motor needs to go
-                double direction = (diffDegree) / abs(diffDegree);
+                    // gets a double, being 1 or -1 based on direction the motor needs to go
+                    double direction = (diffDegree) / abs(diffDegree);
 
-                // sets the motor to the speed, in the probably correct direction
-                motor.setPower(speed * direction);
+                    // sets the motor to the speed, in the probably correct direction
+                    motor.setPower(speed * direction);
 
-                sleep(50);
-            } while ((abs(diffDegree) > 2 && opModeIsActive() && targetDegree == targetAngle) && !abortAsync);
-            motor.setPower(0);
-            isAsyncing = false;
-        });
+                    sleep(50);
+                } while ((abs(diffDegree) > 5 && opModeIsActive()) && !abortAsync.get());
+                motor.setPower(0);
+                isAsyncing.set(false);
+            });
+        }
     }
 
     // Function which uses the webcam to return the team element's position
