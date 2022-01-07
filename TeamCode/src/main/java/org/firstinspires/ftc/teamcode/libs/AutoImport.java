@@ -69,8 +69,8 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected int[] armYPositions = {-40, -65, -85, -115};
 
     protected AtomicBoolean isAsyncing = new AtomicBoolean(false);
-    protected AtomicBoolean abortAsync = new AtomicBoolean(false);
     protected AtomicInteger targetDegree = new AtomicInteger();
+    protected CompletableFuture driveUsingIMUReturn;
 
     public AutoImport(int startX, int startY, int cam1X, int cam1Y, int cam2X, int cam2Y) {
         startingPoseX = startX;
@@ -201,15 +201,13 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     // Function which uses the IMU to drive a motor
     // speed must be greater than 0!
     public void driveUsingIMU(double targetDegree, double speed, DcMotor motor, BNO055IMU imu){
-        //abortAsync.set(false);
-
         // Uses an atomic class variable to hold any targetDegree parameters, required to update
         // it in an existing thread.
         this.targetDegree.set((int)targetDegree);
 
         // Starts the thread if it isn't running.
         if (!isAsyncing.get()) {
-            CompletableFuture.runAsync(() -> {
+            driveUsingIMUReturn = CompletableFuture.runAsync(() -> {
                 isAsyncing.set(true);
                 double imuDegree;
                 double diffDegree;
@@ -226,7 +224,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
                     motor.setPower(speed * direction);
 
                     sleep(50);
-                } while ((abs(diffDegree) > 5 && opModeIsActive()) && !abortAsync.get());
+                } while (abs(diffDegree) > 5 && opModeIsActive());
                 motor.setPower(0);
                 isAsyncing.set(false);
             });

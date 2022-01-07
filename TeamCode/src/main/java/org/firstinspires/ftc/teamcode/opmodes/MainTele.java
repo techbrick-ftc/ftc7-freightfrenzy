@@ -145,7 +145,9 @@ public class MainTele extends AutoImport {
                 driveUsingIMU(armYPositions[armYSetting], 1, armY, getImu2());
             } else if (gamepad2.left_stick_button) {
                 // Manual control for armY
-                if (isAsyncing.get()) {abortAsync.set(true);}
+                if (isAsyncing.get()) {
+                    driveUsingIMUReturn.cancel(true);
+                }
                 double armYPower = gamepad2.left_stick_y;
                 armY.setPower(armYPower);
             } else if (!isAsyncing.get()) {
