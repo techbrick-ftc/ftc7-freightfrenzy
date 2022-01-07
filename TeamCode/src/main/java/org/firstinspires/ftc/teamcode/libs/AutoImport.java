@@ -72,6 +72,10 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected AtomicInteger targetDegree = new AtomicInteger();
     protected CompletableFuture driveUsingIMUReturn;
 
+    protected AtomicBoolean isAsyncing2 = new AtomicBoolean(false);
+    protected AtomicInteger targetDegree2 = new AtomicInteger();
+    protected CompletableFuture driveUsingIMUReturn2;
+
     public AutoImport(int startX, int startY, int cam1X, int cam1Y, int cam2X, int cam2Y) {
         startingPoseX = startX;
         startingPoseY = startY;
@@ -179,7 +183,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
 
     // Function which raises the arm to the required shipping hub positions
     public void setArm(int height, double power) {
-        driveUsingIMU(armYPositions[height], power, armY, getImu2());
+        driveUsingIMU(armYPositions[height], power, armY, AxesOrder.XYZ, getImu2());
     }
 
     // Function which runs the intake for a certain period of time. -1 = intake, 1 = outtake
@@ -200,7 +204,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
 
     // Function which uses the IMU to drive a motor
     // speed must be greater than 0!
-    public void driveUsingIMU(double targetDegree, double speed, DcMotor motor, BNO055IMU imu){
+    public void driveUsingIMU(double targetDegree, double speed, DcMotor motor, AxesOrder axisOrder, BNO055IMU imu){
         // Uses an atomic class variable to hold any targetDegree parameters, required to update
         // it in an existing thread.
         this.targetDegree.set((int)targetDegree);
@@ -214,7 +218,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
 
                 // Moves motor
                 do {
-                    imuDegree = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
+                    imuDegree = imu.getAngularOrientation(AxesReference.INTRINSIC, axisOrder, AngleUnit.DEGREES).firstAngle;
                     diffDegree = this.targetDegree.get() - imuDegree;
 
                     // gets a double, being 1 or -1 based on direction the motor needs to go
@@ -227,6 +231,38 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
                 } while (abs(diffDegree) > 5 && opModeIsActive());
                 motor.setPower(0);
                 isAsyncing.set(false);
+            });
+        }
+    }
+
+    // Another one
+    public void driveUsingIMU2(double targetDegree, double speed, DcMotor motor, AxesOrder axisOrder, BNO055IMU imu){
+        // Uses an atomic class variable to hold any targetDegree parameters, required to update
+        // it in an existing thread.
+        this.targetDegree2.set((int)targetDegree);
+
+        // Starts the thread if it isn't running.
+        if (!isAsyncing2.get()) {
+            driveUsingIMUReturn2 = CompletableFuture.runAsync(() -> {
+                isAsyncing2.set(true);
+                double imuDegree;
+                double diffDegree;
+
+                // Moves motor
+                do {
+                    imuDegree = imu.getAngularOrientation(AxesReference.INTRINSIC, axisOrder, AngleUnit.DEGREES).firstAngle;
+                    diffDegree = this.targetDegree2.get() - imuDegree;
+
+                    // gets a double, being 1 or -1 based on direction the motor needs to go
+                    double direction = (diffDegree) / abs(diffDegree);
+
+                    // sets the motor to the speed, in the probably correct direction
+                    motor.setPower(speed * direction);
+
+                    sleep(50);
+                } while (abs(diffDegree) > 5 && opModeIsActive());
+                motor.setPower(0);
+                isAsyncing2.set(false);
             });
         }
     }

@@ -139,10 +139,10 @@ public class MainTele extends AutoImport {
             // Increments vertical position each dpad input
             if (cur2.dpad_up && !prev2.dpad_up && (armYSetting < 3)) {
                 armYSetting++;
-                driveUsingIMU(armYPositions[armYSetting], 1, armY, getImu2());
+                driveUsingIMU(armYPositions[armYSetting], 1, armY, AxesOrder.XYZ, getImu2());
             } else if (cur2.dpad_down && !prev2.dpad_down && (armYSetting > 0)) {
                 armYSetting--;
-                driveUsingIMU(armYPositions[armYSetting], 1, armY, getImu2());
+                driveUsingIMU(armYPositions[armYSetting], 1, armY, AxesOrder.XYZ, getImu2());
             } else if (gamepad2.left_stick_button) {
                 // Manual control for armY
                 if (isAsyncing.get()) {
