@@ -121,10 +121,10 @@ public class MainTele extends AutoImport {
 
             // Controls arm horizontal axis
             // Enforces imu barriers at 90 and -90 degrees of starting position horizontally
-            if (armXToRobot >= 90) {
+            if (armXToRobot <= -90) {
                 armXMax = 0.8;
                 armXMin = 0;
-            } else if (armXToRobot <= -90) {
+            } else if (armXToRobot >= 90) {
                 armXMax = 0;
                 armXMin = -0.8;
             } else {
@@ -132,7 +132,7 @@ public class MainTele extends AutoImport {
                 armXMin = -0.8;
             }
 
-            double armXPower = Range.clip(gamepad2.right_stick_x, armXMin, armXMax);
+            double armXPower = Range.clip(-gamepad2.right_stick_x, armXMin, armXMax);
             armX.setPower(armXPower);
 
             // Controls arm vertical axis

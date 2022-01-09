@@ -104,6 +104,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
 
         armX = hardwareMap.get(DcMotor.class, "armX");
         armX.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armX.setDirection(DcMotorSimple.Direction.REVERSE);
         armY = hardwareMap.get(DcMotor.class, "armY");
         armY.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
