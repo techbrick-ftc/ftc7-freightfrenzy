@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.libs.AutoImport;
 @Autonomous(name="BlueAutoStorageLocal", group="blueAuto")
 public class BlueAutoStorageLocal extends AutoImport {
 
-    public BlueAutoStorageLocal() { super(65,  27, 72, 215, 170, 215); }
+    public BlueAutoStorageLocal() { super(65,  27, 68, 215, 158, 215); }
 
     public void runOpMode() {
         super.runOpMode();
@@ -27,11 +27,8 @@ public class BlueAutoStorageLocal extends AutoImport {
             slauto.drive(25, 60, 90, 0.75, 0, this, false, true);
             slauto.drive(25, 33, 90, 0.75, 0, this, true, false);
             deposit(true);
-            sleep(1000);
-            //runIntake(1, 1000);
-            //sleep(1000);
-            slauto.drive(25, 35, 90, 1, 0, this, false, false);
-            slauto.drive(25, 33, 90, 1, 0, this, false, false);
+            sleep(500);
+            shimmy(1, 1, 200);
             deposit(false);
 
             // Parks in storage

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.libs.AutoImport;
 @Autonomous(name="BlueAutoWarehouseDeep", group="blueAuto")
 public class BlueAutoWarehouseDeep extends AutoImport {
 
-    public BlueAutoWarehouseDeep() { super(65, -17, 72, 215, 160, 215); } // change
+    public BlueAutoWarehouseDeep() { super(65, -17, 28, 180, 116, 215); }
 
     public void runOpMode() {
         super.runOpMode();
@@ -22,11 +22,8 @@ public class BlueAutoWarehouseDeep extends AutoImport {
             sleep(1000);
             slauto.drive(47, 14, 0, 0.75, this);
             deposit(true);
-            sleep(1000);
-            //runIntake(1, 1000);
-            //sleep(1000);
-            slauto.drive(49, 14, 0, 1, 0, this, false, false);
-            slauto.drive(47, 14, 0, 1, 0, this, false, false);
+            sleep(500);
+            shimmy(1, 1, 200);
             deposit(false);
 
             // Goes into the warehouse

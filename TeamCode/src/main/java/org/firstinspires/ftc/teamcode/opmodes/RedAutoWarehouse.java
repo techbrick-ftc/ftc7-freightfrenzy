@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.libs.AutoImport;
 @Autonomous(name="RedAutoWarehouse", group="redAuto")
 public class RedAutoWarehouse extends AutoImport {
 
-    public RedAutoWarehouse() { super(65, 5, 72, 215, 170, 215); }
+    public RedAutoWarehouse() { super(65, 5, 68, 215, 158, 215); }
 
     public void runOpMode() {
         super.runOpMode();
@@ -22,16 +22,13 @@ public class RedAutoWarehouse extends AutoImport {
             sleep(1000);
             slauto.drive(47, -14, 0, 0.75, this);
             deposit(true);
-            sleep(1000);
-            //runIntake(1, 1000);
-            //sleep(1000);
-            slauto.drive(49, -14, 0, 1, 0, this, false, false);
-            slauto.drive(47, -14, 0, 1, 0, this, false, false);
+            sleep(500);
+            shimmy(1, 1, 200);
             deposit(false);
 
             // Goes into the warehouse
             slauto.drive(60, 0, 0, 0.5, 0, this, false, true);
-            slauto.drive(65, 15, 0, 0.75, 3000, this, false, false);
+            slauto.drive(67, 15, 0, 0.75, 3000, this, false, false);
             slauto.drive(65, 30, 0, 0.75, 3000, this, false, false);
 
             // Lowers arm

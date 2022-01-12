@@ -66,7 +66,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected int camera1Y;
     protected int camera2X;
     protected int camera2Y;
-    protected int[] armYPositions = {-40, -65, -85, -115};
+    protected int[] armYPositions = {-38, -65, -85, -115};
 
     protected AtomicBoolean isAsyncing = new AtomicBoolean(false);
     protected AtomicInteger targetDegree = new AtomicInteger();
@@ -169,15 +169,15 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     // Function which pushes the robot spinner into the wall, before running it. True = red
     public void setSpinny(boolean redSide, int timeout) {
         if (redSide) { // red
-            slauto.drive(65, -60, -90, 0.3, timeout, this, false, true);
+            slauto.drive(65, -60, -90, 0.5, timeout, this, false, true);
             spinner.setPower(-0.8);
-            sleep(4000);
+            sleep(3000);
             spinner.setPower(0);
 
         } else { // blue
-            slauto.drive(65, 60, 0, 0.3, timeout, this, false, true);
+            slauto.drive(65, 60, 0, 0.5, timeout, this, false, true);
             spinner.setPower(0.8);
-            sleep(4000);
+            sleep(3000);
             spinner.setPower(0);
         }
     }
@@ -219,7 +219,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
 
                 // Moves motor
                 do {
-                    imuDegree = imu.getAngularOrientation(AxesReference.INTRINSIC, axisOrder, AngleUnit.DEGREES).firstAngle;
+                    imuDegree = imu.getAngularOrientation(AxesReference.EXTRINSIC, axisOrder, AngleUnit.DEGREES).firstAngle;
                     diffDegree = this.targetDegree.get() - imuDegree;
 
                     // gets a double, being 1 or -1 based on direction the motor needs to go
@@ -267,6 +267,40 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
             });
         }
     }
+
+    public void driveUntilFull(double power) {
+        ElapsedTime et = new ElapsedTime();
+        while (colorRange.getLightDetected() <= 0.11 && et.milliseconds() > 1500) {
+            fl.setPower(power);
+            fr.setPower(power);
+            rl.setPower(power);
+            rr.setPower(power);
+        }
+        fl.setPower(0);
+        fr.setPower(0);
+        rl.setPower(0);
+        rr.setPower(0);
+    }
+
+    public void shimmy(double power, int amount, int delay) {
+        for (int i = 0; i < amount; i++) {
+            fl.setPower(power);
+            fr.setPower(power);
+            rl.setPower(power);
+            rr.setPower(power);
+            sleep(delay);
+            fl.setPower(-power);
+            fr.setPower(-power);
+            rl.setPower(-power);
+            rr.setPower(-power);
+            sleep(delay);
+        }
+        fl.setPower(0);
+        fr.setPower(0);
+        rl.setPower(0);
+        rr.setPower(0);
+    }
+
 
     // Function which uses the webcam to return the team element's position
     public int getElementPosition(long delay) {
