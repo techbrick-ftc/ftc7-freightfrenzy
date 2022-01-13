@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import static org.firstinspires.ftc.teamcode.libs.Globals.*;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
@@ -72,6 +73,7 @@ public class MainTele extends AutoImport {
         double armYRange = 0;
         double forkConst = 0;
         boolean forkUp = false;
+        boolean imuExited = false;
 
         // Starting servo & motor positions
 
@@ -137,21 +139,57 @@ public class MainTele extends AutoImport {
 
             // Controls arm vertical axis
             // Increments vertical position each dpad input
-            if (cur2.dpad_up && !prev2.dpad_up && (armYSetting < 3)) {
-                armYSetting++;
-                driveUsingIMU(armYPositions[armYSetting], 1, armY, AxesOrder.XYZ, getImu2());
-            } else if (cur2.dpad_down && !prev2.dpad_down && (armYSetting > 0)) {
-                armYSetting--;
-                driveUsingIMU(armYPositions[armYSetting], 1, armY, AxesOrder.XYZ, getImu2());
-            } else if (gamepad2.left_stick_button) {
-                // Manual control for armY
-                if (isAsyncing.get()) {
-                    driveUsingIMUReturn.cancel(true);
+            if (getImu2().getSystemStatus() == BNO055IMU.SystemStatus.RUNNING_FUSION) {
+                // Uses IMU
+                if (cur2.dpad_up && !prev2.dpad_up && (armYSetting < 3)) {
+                    armYSetting++;
+                    driveUsingIMU(armYPositions[armYSetting], 1, armY, AxesOrder.XYZ, getImu2());
+                } else if (cur2.dpad_down && !prev2.dpad_down && (armYSetting > 0)) {
+                    armYSetting--;
+                    driveUsingIMU(armYPositions[armYSetting], 1, armY, AxesOrder.XYZ, getImu2());
+                } else if (gamepad2.left_stick_button) {
+                    // Manual control for armY
+                    if (isAsyncing.get()) {
+                        driveUsingIMUReturn.cancel(true);
+                    }
+                    double armYPower = gamepad2.left_stick_y;
+                    armY.setPower(armYPower);
+                } else if (!isAsyncing.get()) {
+                    armY.setPower(0);
                 }
-                double armYPower = gamepad2.left_stick_y;
-                armY.setPower(armYPower);
-            } else if (!isAsyncing.get()) {
-                armY.setPower(0);
+
+            } else {
+                System.out.println("**************************falling back on encoder***");
+
+                if (!imuExited) {
+                    driveUsingIMUReturn.cancel(true);
+                    sleep(500);
+                    armY.setPower(0);
+                    imuExited = true;
+                }
+
+                // Uses Encoder, in the case that IMU fails
+                if (cur2.dpad_up && !prev2.dpad_up && (armYSetting < 3)) {
+                    armYSetting++;
+                    armY.setTargetPosition(armYEncPositions[armYSetting]);
+                    armY.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    armY.setPower(1);
+                } else if (cur2.dpad_down && !prev2.dpad_down && (armYSetting > 0)) {
+                    armYSetting--;
+                    armY.setTargetPosition(armYEncPositions[armYSetting]);
+                    armY.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    armY.setPower(1);
+                }
+                if (!armY.isBusy()) {
+                    armY.setPower(0);
+                }
+
+                // Manual control for armY
+                if (gamepad2.left_stick_button) {
+                    armY.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    double armYPower = gamepad2.left_stick_y;
+                    armY.setPower(armYPower);
+                }
             }
 
             // Controls fork servo
@@ -257,7 +295,17 @@ public class MainTele extends AutoImport {
             packet.put("zArmRange", armYRange);
             packet.put("zAttemptForkRange", forkRange);
             packet.put("zActualForkRange", fork.getPosition());
+            packet.put("aaaaArmYStatus", getImu2().getSystemStatus());
             dashboard.sendTelemetryPacket(packet);
+
+            System.out.println("**start of print**");
+            System.out.println("armYAngle: " + armYAngle);
+            System.out.println("armYEnc: " + armY.getCurrentPosition());
+            System.out.println("armYPower: " + armY.getPower());
+            System.out.println("armYError: " + getImu2().getSystemError());
+            System.out.println("armYStatus: " + getImu2().getSystemStatus());
+            System.out.println("**end of print**");
+            System.out.println("**");
 
             loops++;
         }

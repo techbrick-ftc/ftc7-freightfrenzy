@@ -67,6 +67,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected int camera2X;
     protected int camera2Y;
     protected int[] armYPositions = {-38, -65, -85, -115};
+    protected int[] armYEncPositions = {0, -1930, -2800, -3700};
 
     protected AtomicBoolean isAsyncing = new AtomicBoolean(false);
     protected AtomicInteger targetDegree = new AtomicInteger();
