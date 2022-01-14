@@ -23,10 +23,15 @@ public class RedAutoWarehouseNabbing extends AutoImport {
             sleep(1000);
             slauto.drive(47, -14, 0, 0.75, this);
             deposit(true);
+
+            // Does a little shimmy if it is in the highest goal, as it needs a bit of help to drop
             sleep(500);
-            //runIntake(1, 1000);
-            //sleep(1000);
-            shimmy(1, 1, 500);
+            if (elementPosition == 2) {
+                shimmy(0.8, 1, 100);
+            } else {
+                sleep(200);
+            }
+
             deposit(false);
 
             driveUsingIMU2(-90, 0.5, armX, AxesOrder.ZYX, getImu2());
@@ -55,9 +60,7 @@ public class RedAutoWarehouseNabbing extends AutoImport {
             slauto.drive(47, -14, 0, 0.75, this);
             deposit(true);
             sleep(500);
-            shimmy(1, 1, 500);
-            //slauto.drive(50, -14, 0, 1, 0, this, false, false);
-            //slauto.drive(47, -14, 0, 1, 0, this, false, false);
+            shimmy(0.8, 1, 100);
             sleep(500);
             deposit(false);
 
@@ -68,8 +71,9 @@ public class RedAutoWarehouseNabbing extends AutoImport {
 
             // Lowers arm
             setArm(0, 1);
-            while (armY.isBusy()){
-                sleep(10);
+
+            while (timer.seconds() < 30) {
+                sleep(100);
             }
 
             stopCamera();

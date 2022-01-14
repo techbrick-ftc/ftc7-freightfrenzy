@@ -22,8 +22,15 @@ public class BlueAutoWarehouseDeep extends AutoImport {
             sleep(1000);
             slauto.drive(47, 14, 0, 0.75, this);
             deposit(true);
+
+            // Does a little shimmy if it is in the highest goal, as it needs a bit of help to drop
             sleep(500);
-            shimmy(1, 1, 200);
+            if (elementPosition == 2) {
+                shimmy(0.8, 1, 100);
+            } else {
+                sleep(200);
+            }
+
             deposit(false);
 
             // Goes into the warehouse
@@ -34,8 +41,9 @@ public class BlueAutoWarehouseDeep extends AutoImport {
 
             // Lowers arm
             setArm(0, 1);
-            while (armY.isBusy()){
-                sleep(10);
+
+            while (timer.seconds() < 30) {
+                sleep(100);
             }
 
             stopCamera();

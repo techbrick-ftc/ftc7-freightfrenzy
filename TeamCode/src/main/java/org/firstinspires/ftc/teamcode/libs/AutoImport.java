@@ -66,7 +66,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected int camera1Y;
     protected int camera2X;
     protected int camera2Y;
-    protected int[] armYPositions = {-38, -65, -85, -115};
+    protected int[] armYPositions = {-36, -65, -85, -110};
     protected int[] armYEncPositions = {0, -1930, -2800, -3700};
 
     protected AtomicBoolean isAsyncing = new AtomicBoolean(false);
@@ -262,6 +262,10 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
                     motor.setPower(speed * direction);
 
                     sleep(50);
+
+                    // if the imu dies from static or whatnot, it exits
+                    if (imu.getSystemStatus() == BNO055IMU.SystemStatus.IDLE) { break; }
+
                 } while (abs(diffDegree) > 5 && opModeIsActive());
                 motor.setPower(0);
                 isAsyncing2.set(false);

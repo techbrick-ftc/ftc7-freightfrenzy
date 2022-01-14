@@ -74,6 +74,7 @@ public class MainTele extends AutoImport {
         double forkConst = 0;
         boolean forkUp = false;
         boolean imuExited = false;
+        double armXPower; // this is just global bc telemetry
 
         // Starting servo & motor positions
 
@@ -121,26 +122,9 @@ public class MainTele extends AutoImport {
 
             }
 
-            // Controls arm horizontal axis
-            // Enforces imu barriers at 90 and -90 degrees of starting position horizontally
-            if (armXToRobot <= -90) {
-                armXMax = 0.8;
-                armXMin = 0;
-            } else if (armXToRobot >= 90) {
-                armXMax = 0;
-                armXMin = -0.8;
-            } else {
-                armXMax = 0.8;
-                armXMin = -0.8;
-            }
-
-            double armXPower = Range.clip(-gamepad2.right_stick_x, armXMin, armXMax);
-            armX.setPower(armXPower);
-
-            // Controls arm vertical axis
-            // Increments vertical position each dpad input
+            // Controls arm
             if (getImu2().getSystemStatus() == BNO055IMU.SystemStatus.RUNNING_FUSION) {
-                // Uses IMU
+                // Increments vertical position each dpad input via IMU
                 if (cur2.dpad_up && !prev2.dpad_up && (armYSetting < 3)) {
                     armYSetting++;
                     driveUsingIMU(armYPositions[armYSetting], 1, armY, AxesOrder.XYZ, getImu2());
@@ -149,7 +133,7 @@ public class MainTele extends AutoImport {
                     driveUsingIMU(armYPositions[armYSetting], 1, armY, AxesOrder.XYZ, getImu2());
                 } else if (gamepad2.left_stick_button) {
                     // Manual control for armY
-                    if (isAsyncing.get()) {
+                    if (isAsyncing.get() && driveUsingIMUReturn != null) {
                         driveUsingIMUReturn.cancel(true);
                     }
                     double armYPower = gamepad2.left_stick_y;
@@ -158,17 +142,40 @@ public class MainTele extends AutoImport {
                     armY.setPower(0);
                 }
 
-            } else {
-                System.out.println("**************************falling back on encoder***");
+                // Controls arm horizontal axis
+                // Enforces imu barriers at 90 and -90 degrees of starting position horizontally
+                if (armXToRobot <= -85) { // Its 85 to account for the arm being really fast
+                    armXMax = 0.8;
+                    armXMin = 0;
+                } else if (armXToRobot >= 85) {
+                    armXMax = 0;
+                    armXMin = -0.8;
+                } else {
+                    armXMax = 0.8;
+                    armXMin = -0.8;
+                }
 
+                armXPower = Range.clip(-gamepad2.right_stick_x, armXMin, armXMax);
+                armX.setPower(armXPower);
+
+            } else {
+                // Switches Encoder, in the case that IMU fails
                 if (!imuExited) {
-                    driveUsingIMUReturn.cancel(true);
-                    sleep(500);
+                    System.out.println("**************************falling back on encoder***");
+                    telemetry.addLine("IMU HAS DIED");
+                    telemetry.update();
+
+                    // Stops arm
+                    if (driveUsingIMUReturn != null) {
+                        driveUsingIMUReturn.cancel(true);
+                        sleep(500);
+                    }
                     armY.setPower(0);
+
                     imuExited = true;
                 }
 
-                // Uses Encoder, in the case that IMU fails
+                // Increments vertical position each dpad input via encoder
                 if (cur2.dpad_up && !prev2.dpad_up && (armYSetting < 3)) {
                     armYSetting++;
                     armY.setTargetPosition(armYEncPositions[armYSetting]);
@@ -180,16 +187,17 @@ public class MainTele extends AutoImport {
                     armY.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     armY.setPower(1);
                 }
-                if (!armY.isBusy()) {
-                    armY.setPower(0);
-                }
 
                 // Manual control for armY
                 if (gamepad2.left_stick_button) {
-                    armY.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     double armYPower = gamepad2.left_stick_y;
                     armY.setPower(armYPower);
+                } else if (!cur2.left_stick_button && prev2.left_stick_button) {
+                    armY.setPower(0);
                 }
+
+                armXPower = Range.clip(-gamepad2.right_stick_x, -0.8, 0.8);
+                armX.setPower(armXPower);
             }
 
             // Controls fork servo

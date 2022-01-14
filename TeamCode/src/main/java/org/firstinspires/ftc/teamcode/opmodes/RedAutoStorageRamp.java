@@ -27,8 +27,15 @@ public class RedAutoStorageRamp extends AutoImport {
             slauto.drive(25, -55, -90, 0.75, 0, this, false, true);
             slauto.drive(25, -33, -90, 0.75, 0, this, true, false);
             deposit(true);
+
+            // Does a little shimmy if it is in the highest goal, as it needs a bit of help to drop
             sleep(500);
-            shimmy(1, 1, 200);
+            if (elementPosition == 2) {
+                shimmy(0.8, 1, 100);
+            } else {
+                sleep(200);
+            }
+
             deposit(false);
 
             // Goes over to the warehouse
@@ -51,8 +58,9 @@ public class RedAutoStorageRamp extends AutoImport {
 
             // Lowers arm
             setArm(0, 1);
-            while (armY.isBusy()){
-                sleep(10);
+
+            while (timer.seconds() < 30) {
+                sleep(100);
             }
 
             stopCamera();
