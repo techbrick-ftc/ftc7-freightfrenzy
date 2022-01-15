@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.libs.AutoImport;
 
-@Autonomous(name="BlueAutoStorageLocal", group="blueAuto")
+@Autonomous(name="B2 - BlueAutoStorageLocal", group="blueAuto")
 public class BlueAutoStorageLocal extends AutoImport {
 
     public BlueAutoStorageLocal() { super(65,  27, 68, 215, 158, 215); }

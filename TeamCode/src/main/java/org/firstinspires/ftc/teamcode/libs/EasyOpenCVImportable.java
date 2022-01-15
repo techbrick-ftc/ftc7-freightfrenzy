@@ -127,7 +127,7 @@ public class EasyOpenCVImportable {
         static final int REGION_WIDTH = width;
         static final int REGION_HEIGHT = height;
 
-        final int ELEMENT_THRESHOLD = 80; // USE THIS TO CHANGE THE MAXIMUM AVG VALUE FOR DETECTION
+        final int ELEMENT_THRESHOLD = 85; // Everything below this value is considered a detection
 
         Point region1_pointA = new Point(
                 REGION1_TOPLEFT_ANCHOR_POINT.x,

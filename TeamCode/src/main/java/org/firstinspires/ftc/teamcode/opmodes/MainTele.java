@@ -231,7 +231,7 @@ public class MainTele extends AutoImport {
                 }
             } else if (cur2.left_bumper && !prev2.left_bumper) {
                 if (!outtaking) {
-                    intake.setPower(1);
+                    intake.setPower(0.3);
                     intaking = false;
                     outtaking = true;
                 }

@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.teamcode.libs.AutoImport;
 
-@Autonomous(name="RedAutoWarehouseNabbing", group="redAuto")
+@Autonomous(name="R6 - RedAutoWarehouseNabbing", group="redAuto")
 public class RedAutoWarehouseNabbing extends AutoImport {
 
     public RedAutoWarehouseNabbing() { super(65, 5, 68, 215, 158, 215); }
@@ -66,8 +66,8 @@ public class RedAutoWarehouseNabbing extends AutoImport {
 
             // Goes into the warehouse
             slauto.drive(60, 0, 0, 0.5, 0, this, false, true);
-            slauto.drive(67, 15, 0, 0.75, 3000, this, false, false);
-            slauto.drive(65, 30, 0, 0.75, 3000, this, false, false);
+            slauto.drive(66, 15, 0, 0.75, 3000, this, false, false);
+            slauto.drive(65, 35, 0, 0.75, 3000, this, false, false);
 
             // Lowers arm
             setArm(0, 1);

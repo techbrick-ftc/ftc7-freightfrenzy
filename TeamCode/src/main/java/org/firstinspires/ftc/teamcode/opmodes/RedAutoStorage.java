@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.libs.AutoImport;
 
-@Autonomous(name="RedAutoStorage", group="redAuto")
+@Autonomous(name="R1 - RedAutoStorage", group="redAuto")
 public class RedAutoStorage extends AutoImport {
 
     public RedAutoStorage() { super(65, -40, 68, 215, 158, 215); }
@@ -23,8 +23,8 @@ public class RedAutoStorage extends AutoImport {
             // Goes to the shipping hub and delivers based on the team element position
             // 1 is added to elementPosition because height's 0 is ground level, not the first layer
             setArm(elementPosition + 1, 1);
-            sleep(1000);
-            slauto.drive(25, -55, -90, 0.75, 0, this, false, true);
+            sleep(500);
+            slauto.drive(25, -60, -90, 0.75, 0, this, false, true);
             slauto.drive(25, -33, -90, 0.75, 0, this, true, false);
             deposit(true);
 
@@ -50,7 +50,7 @@ public class RedAutoStorage extends AutoImport {
 
             // Goes into the warehouse
             slauto.drive(60, 0, 0, 0.5, 0, this, false, true);
-            slauto.drive(65, 15, 0, 0.75, 3000, this, false, false);
+            slauto.drive(66, 15, 0, 0.75, 3000, this, false, false);
             slauto.drive(65, 35, 0, 0.75, 3000, this, false, false);
 
             // Lowers arm

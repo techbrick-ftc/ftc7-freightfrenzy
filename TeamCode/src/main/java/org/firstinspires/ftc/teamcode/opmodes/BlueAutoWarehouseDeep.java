@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.libs.AutoImport;
 
-@Autonomous(name="BlueAutoWarehouseDeep", group="blueAuto")
+@Autonomous(name="B5 - BlueAutoWarehouseDeep", group="blueAuto")
 public class BlueAutoWarehouseDeep extends AutoImport {
 
     public BlueAutoWarehouseDeep() { super(65, -17, 28, 180, 116, 215); }
@@ -20,7 +20,7 @@ public class BlueAutoWarehouseDeep extends AutoImport {
             // 1 is added to elementPosition because height's 0 is ground level, not the first layer
             setArm(elementPosition + 1, 1);
             sleep(1000);
-            slauto.drive(47, 14, 0, 0.75, this);
+            slauto.drive(47, 12, 0, 0.75, this);
             deposit(true);
 
             // Does a little shimmy if it is in the highest goal, as it needs a bit of help to drop
@@ -35,9 +35,9 @@ public class BlueAutoWarehouseDeep extends AutoImport {
 
             // Goes into the warehouse
             slauto.drive(60, 0, 0, 0.5, 0, this, false, true);
-            slauto.drive(65, -15, 0, 0.75, 3000, this, false, false);
-            slauto.drive(65, -35, 0, 0.75, 3000, this, true, false);
-            slauto.drive(40, -35, 0, 0.75, this);
+            slauto.drive(66, -15, 0, 0.5, 3000, this, false, false);
+            slauto.drive(65, -35, 0, 0.5, 3000, this, true, false);
+            slauto.drive(40, -35, 0, 0.5, this);
 
             // Lowers arm
             setArm(0, 1);

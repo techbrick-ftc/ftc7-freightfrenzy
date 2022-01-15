@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.libs.AutoImport;
 import org.firstinspires.ftc.teamcode.libs.Globals;
 
+@Disabled
 @Autonomous(name="ArmTest", group="test")
 public class ArmTest extends AutoImport {
 

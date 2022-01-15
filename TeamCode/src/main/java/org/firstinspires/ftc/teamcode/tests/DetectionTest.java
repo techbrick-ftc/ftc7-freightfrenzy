@@ -8,12 +8,13 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.libs.AutoImport;
 
+
 @TeleOp(name="DetectionTest", group="test")
 public class DetectionTest extends AutoImport {
 
     public DetectionTest() {
         // change cam values
-        super(0, 0, 28, 180, 116, 215);
+        super(0, 0, 68, 215, 158, 215);
     }
 
     public void runOpMode() {

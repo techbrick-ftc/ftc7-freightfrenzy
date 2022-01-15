@@ -8,11 +8,13 @@ package org.firstinspires.ftc.teamcode.tests;
 
 import static org.firstinspires.ftc.teamcode.libs.Globals.*;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.libs.AutoImport;
 
+@Disabled
 @TeleOp(name="SensorTest", group="test")
 public class SensorTest extends AutoImport {
 

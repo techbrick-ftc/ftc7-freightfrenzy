@@ -23,6 +23,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -66,7 +67,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected int camera1Y;
     protected int camera2X;
     protected int camera2Y;
-    protected int[] armYPositions = {-36, -65, -85, -110};
+    protected int[] armYPositions = {-34, -63, -85, -110};
     protected int[] armYEncPositions = {0, -1930, -2800, -3700};
 
     protected AtomicBoolean isAsyncing = new AtomicBoolean(false);
@@ -217,6 +218,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
                 isAsyncing.set(true);
                 double imuDegree;
                 double diffDegree;
+                double newSpeed = speed;
 
                 // Moves motor
                 do {
@@ -226,7 +228,10 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
                     // gets a double, being 1 or -1 based on direction the motor needs to go
                     double direction = (diffDegree) / abs(diffDegree);
 
-                    // sets the motor to the speed, in the probably correct direction
+                    // slows down as it approaches for more precise movements
+                    newSpeed *= Range.clip(diffDegree / 10, 0.5, 1);
+
+                    // sets the motor to the speed, in the correct direction
                     motor.setPower(speed * direction);
 
                     sleep(50);
@@ -249,6 +254,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
                 isAsyncing2.set(true);
                 double imuDegree;
                 double diffDegree;
+                double newSpeed = speed;
 
                 // Moves motor
                 do {
@@ -258,7 +264,10 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
                     // gets a double, being 1 or -1 based on direction the motor needs to go
                     double direction = (diffDegree) / abs(diffDegree);
 
-                    // sets the motor to the speed, in the probably correct direction
+                    // slows down as it approaches for more precise movements
+                    newSpeed *= Range.clip(diffDegree / 10, 0.5, 1);
+
+                    // sets the motor to the speed, in the correct direction
                     motor.setPower(speed * direction);
 
                     sleep(50);

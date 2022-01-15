@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.libs.AutoImport;
 
-@Autonomous(name="BlueAutoStorageRamp", group="blueAuto")
+@Autonomous(name="B3 - BlueAutoStorageRamp", group="blueAuto")
 public class BlueAutoStorageRamp extends AutoImport {
 
     public BlueAutoStorageRamp() { super(65,  27, 68, 215, 158, 215); }
@@ -24,7 +24,7 @@ public class BlueAutoStorageRamp extends AutoImport {
             // 1 is added to elementPosition because height's 0 is ground level, not the first layer
             setArm(elementPosition + 1, 1);
             sleep(1000);
-            slauto.drive(25, 55, 90, 0.75, 0, this, false, true);
+            slauto.drive(25, 60, 90, 0.75, 0, this, false, true);
             slauto.drive(25, 33, 90, 0.75, 0, this, true, false);
             deposit(true);
 
