@@ -39,24 +39,26 @@ public class RedAutoWarehouseNabbing extends AutoImport {
             // Attempts to get a block and score it
             slauto.drive(60, 0, 0, 0.5, 0, this, false, true);
             setArm(0, 1);
-            slauto.drive(67, 15, 0, 0.75, 3000, this, false, false);
-            slauto.drive(65, 30, 0, 0.75, 3000, this, false, false);
+            slauto.drive(66, 15, 0, 0.75, 3000, this, false, false);
+            slauto.drive(63, 30, 0, 0.75, 3000, this, false, false);
 
             intake.setPower(-1);
             driveUntilFull(0.5);
-            intake.setPower(0);
+
+            sleep(250);
 
             // resets thingies
-            slauto.drive(65, 30, 0, 0.75, 3000, this, false, true);
+            slauto.drive(60, 40, 0, 0.6, 3000, this, false, true);
+            sleep(500);
             setArm(3, 1);
-            sleep(2000);
+            sleep(1000);
+            intake.setPower(0);
             driveUsingIMU2(0, 0.5, armX, AxesOrder.ZYX, getImu2());
-            sleep(3000);
 
             // tries to score any block held
-            slauto.drive(65, 30, 0, 0.75, 3000, this, false, true);
-            slauto.drive(67, 15, 0, 0.75, 3000, this, false, false);
-            slauto.drive(60, 0, 0, 0.5, 3000, this, true, false);
+            slauto.drive(65, 35, 0, 0.75, 3000, this, false, true);
+            slauto.drive(66, 15, 0, 0.75, 3000, this, false, false);
+            slauto.drive(60, 0, 0, 0.75, 3000, this, true, false);
             slauto.drive(47, -14, 0, 0.75, this);
             deposit(true);
             sleep(500);

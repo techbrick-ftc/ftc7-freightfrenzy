@@ -35,7 +35,7 @@ public class BlueAutoWarehouseDeep extends AutoImport {
 
             // Goes into the warehouse
             slauto.drive(60, 0, 0, 0.5, 0, this, false, true);
-            slauto.drive(66, -15, 0, 0.5, 3000, this, false, false);
+            slauto.drive(65, -15, 0, 0.5, 3000, this, false, false);
             slauto.drive(65, -35, 0, 0.5, 3000, this, true, false);
             slauto.drive(40, -35, 0, 0.5, this);
 

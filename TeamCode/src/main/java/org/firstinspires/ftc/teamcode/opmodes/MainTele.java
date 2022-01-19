@@ -253,9 +253,9 @@ public class MainTele extends AutoImport {
 
             // Toggles spinner
             if (gamepad2.a) {
-                spinner.setPower(1);
+                spinner.setPower(0.8);
             } else if (gamepad2.x) {
-                spinner.setPower(-1);
+                spinner.setPower(-0.8);
             } else {
                 spinner.setPower(0);
             }

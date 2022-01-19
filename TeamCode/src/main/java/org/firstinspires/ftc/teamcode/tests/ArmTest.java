@@ -11,7 +11,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.libs.AutoImport;
 import org.firstinspires.ftc.teamcode.libs.Globals;
 
-@Disabled
 @Autonomous(name="ArmTest", group="test")
 public class ArmTest extends AutoImport {
 
@@ -21,15 +20,16 @@ public class ArmTest extends AutoImport {
         super.runOpMode();
 
         if (opModeIsActive()) {
-            driveUsingIMU2(-90, 0.3, armX, AxesOrder.ZYX, getImu2());
-            setArm(0, 0.5);
+
+            setArm(3, 1);
 
             while (opModeIsActive()) {
-                packet.put("armXAngle", getImu2().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
+                /*packet.put("armXAngle", getImu2().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
                 packet.put("armYAngle", getImu2().getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle);
                 packet.put("robotAngle", getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
                 packet.put("armXToRobot", wrap(getImu2().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle - getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle));
-                dashboard.sendTelemetryPacket(packet);
+                dashboard.sendTelemetryPacket(packet);*/
+                sleep(100);
             }
         }
     }

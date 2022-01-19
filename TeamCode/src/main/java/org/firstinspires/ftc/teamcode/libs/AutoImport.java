@@ -172,13 +172,13 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     public void setSpinny(boolean redSide, int timeout) {
         if (redSide) { // red
             slauto.drive(65, -60, -90, 0.5, timeout, this, false, true);
-            spinner.setPower(-0.8);
+            spinner.setPower(-0.7);
             sleep(3000);
             spinner.setPower(0);
 
         } else { // blue
             slauto.drive(65, 60, 0, 0.5, timeout, this, false, true);
-            spinner.setPower(0.8);
+            spinner.setPower(0.7);
             sleep(3000);
             spinner.setPower(0);
         }
@@ -232,9 +232,18 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
                     newSpeed *= Range.clip(diffDegree / 10, 0.5, 1);
 
                     // sets the motor to the speed, in the correct direction
-                    motor.setPower(speed * direction);
+                    motor.setPower(newSpeed * direction);
+
+                    // does telemetry
+                    packet.put("newSpeed", newSpeed);
+                    packet.put("direction", direction);
+                    dashboard.sendTelemetryPacket(packet);
 
                     sleep(50);
+
+                    // if the imu dies from static or whatnot, it exits
+                    if (imu.getSystemStatus() == BNO055IMU.SystemStatus.IDLE) { break; }
+
                 } while (abs(diffDegree) > 5 && opModeIsActive());
                 motor.setPower(0);
                 isAsyncing.set(false);
@@ -268,7 +277,12 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
                     newSpeed *= Range.clip(diffDegree / 10, 0.5, 1);
 
                     // sets the motor to the speed, in the correct direction
-                    motor.setPower(speed * direction);
+                    motor.setPower(newSpeed * direction);
+
+                    // does telemetry
+                    packet.put("newSpeed", newSpeed);
+                    packet.put("direction", direction);
+                    dashboard.sendTelemetryPacket(packet);
 
                     sleep(50);
 
@@ -284,7 +298,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
 
     public void driveUntilFull(double power) {
         ElapsedTime et = new ElapsedTime();
-        while (colorRange.getLightDetected() <= 0.11 && et.milliseconds() > 1500) {
+        while (colorRange.getLightDetected() <= 0.11 && et.milliseconds() < 2000) {
             fl.setPower(power);
             fr.setPower(power);
             rl.setPower(power);

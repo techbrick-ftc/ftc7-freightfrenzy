@@ -14,7 +14,7 @@ public class DetectionTest extends AutoImport {
 
     public DetectionTest() {
         // change cam values
-        super(0, 0, 68, 215, 158, 215);
+        super(0, 0, 28, 180, 116, 215);
     }
 
     public void runOpMode() {
@@ -46,7 +46,7 @@ public class DetectionTest extends AutoImport {
             packet.put("analysis 2", camera.getAnalysis2());
             dashboard.sendTelemetryPacket(packet);
 
-            // Try moving arm bc wtf aaaaaaaaaaa
+            // Try moving arm
             if (cur1.a && !prev1.a) {
                 setArm(camera.getDetection() + 1, 1);
             }
