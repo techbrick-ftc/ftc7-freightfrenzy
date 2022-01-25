@@ -39,9 +39,9 @@ public class BlueAutoStorage extends AutoImport {
             deposit(false);
 
             // Goes over to the warehouse
-            slauto.drive(25, 55, 90, 0.75, 0, this, false, true);
+            slauto.drive(25, 55, 90, 0.75, 3000, this, false, true);
             setArm(3, 1);
-            slauto.drive(47, 57, 0, 0.75, 0, this, true, false);
+            slauto.drive(47, 57, 0, 0.75, 3000, this, true, false);
 
             // Waits for other team before moving
             while (timer.seconds() < 24) {

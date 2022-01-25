@@ -229,13 +229,14 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
                     double direction = (diffDegree) / abs(diffDegree);
 
                     // slows down as it approaches for more precise movements
-                    newSpeed *= Range.clip(diffDegree / 10, 0.5, 1);
+                    newSpeed = Range.clip(Math.abs(diffDegree) / 5, 0.5, 1);
 
                     // sets the motor to the speed, in the correct direction
-                    motor.setPower(newSpeed * direction);
+                    motor.setPower((speed * newSpeed) * direction);
 
                     // does telemetry
                     packet.put("newSpeed", newSpeed);
+                    packet.put("effective speed", (speed * newSpeed) * direction);
                     packet.put("direction", direction);
                     dashboard.sendTelemetryPacket(packet);
 
@@ -274,10 +275,10 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
                     double direction = (diffDegree) / abs(diffDegree);
 
                     // slows down as it approaches for more precise movements
-                    newSpeed *= Range.clip(diffDegree / 10, 0.5, 1);
+                    newSpeed = Range.clip(diffDegree / 10, 0.3, 1);
 
                     // sets the motor to the speed, in the correct direction
-                    motor.setPower(newSpeed * direction);
+                    motor.setPower((speed * newSpeed) * direction);
 
                     // does telemetry
                     packet.put("newSpeed", newSpeed);
