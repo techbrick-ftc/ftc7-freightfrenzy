@@ -176,8 +176,8 @@ public class SimpleSlamra {
             System.out.println("Skipping loop");
             return false;
         }
-        Translation2d pose = new Translation2d(up.pose.getTranslation().getX() / 0.0254, up.pose.getTranslation().getY() / 0.0254);
 
+        Translation2d pose = new Translation2d(up.pose.getTranslation().getX() / 0.0254, up.pose.getTranslation().getY() / 0.0254);
         // Saves the robot's current position
         currentX = pose.getX();
         currentY = pose.getY();

@@ -131,7 +131,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
         // initializes slamra
         Pose2d startingPose = new Pose2d(new Translation2d(startingPoseX * 0.0254, startingPoseY * 0.0254), new Rotation2d(0));
         setupCamera(hardwareMap, startingPose);
-        sleep(1000);
+        sleep(10000);
         startCamera();
 
         // passes hardware to slamra class

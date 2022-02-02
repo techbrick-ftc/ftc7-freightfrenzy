@@ -10,18 +10,6 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.spartronics4915.lib.T265Camera;
 
-/*
- * This file is made to be used in the CameraMain class so that the T265 camera and the internal
- * imu do not get instantiated more than once, because keeping them static means
- * THEY PRESERVE THEIR DATA!
- * Isn't that crazy! All this time we had to deal with the camera being reset to 0,0 or the imu
- * axis being reset all to 0, but with keeping that static, it doesn't happen!
- * If you wish to use the camera or imu in OpMode classes, just import and use the get methods and
- * assign that to a variable. For redundancy you can also run the setup methods, but the setup
- * methods are ran inside the CameraMain class, so unless your autonomous class doesn't use the
- * camera, it should already be setup!
- */
-
 public class Globals {
     private static T265Camera camera;
     private static BNO055IMU imu;
