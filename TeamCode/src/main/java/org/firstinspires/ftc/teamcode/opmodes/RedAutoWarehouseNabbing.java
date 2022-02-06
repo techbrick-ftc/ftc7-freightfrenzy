@@ -77,8 +77,7 @@ public class RedAutoWarehouseNabbing extends AutoImport {
             while (timer.seconds() < 30) {
                 sleep(100);
             }
-
-            stopCamera();
         }
+        stopCamera();
     }
 }

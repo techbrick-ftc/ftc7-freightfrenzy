@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.libs.Globals.*;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.geometry.Translation2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -47,9 +48,9 @@ public class SimpleSlamra {
         this.camera = getCamera();
     }
 
-    public Translation2d getPose () {
+    public Pose2d getPose () {
         T265Camera.CameraUpdate up = camera.getLastReceivedCameraUpdate();
-        Translation2d pose = new Translation2d(up.pose.getTranslation().getX() / 0.0254, up.pose.getTranslation().getY() / 0.0254);
+        Pose2d pose = new Pose2d(up.pose.getTranslation().getX() / 0.0254, up.pose.getTranslation().getY() / 0.0254, up.pose.getRotation());
         return pose;
     }
 
@@ -177,12 +178,13 @@ public class SimpleSlamra {
             return false;
         }
 
-        Translation2d pose = new Translation2d(up.pose.getTranslation().getX() / 0.0254, up.pose.getTranslation().getY() / 0.0254);
+        //Translation2d pose = new Translation2d(up.pose.getTranslation().getX() / 0.0254, up.pose.getTranslation().getY() / 0.0254);
+        Pose2d pose = new Pose2d(up.pose.getTranslation().getX() / 0.0254, up.pose.getTranslation().getY() / 0.0254, up.pose.getRotation());
         // Saves the robot's current position
         currentX = pose.getX();
         currentY = pose.getY();
 
-        rotation = up.pose.getRotation();
+        rotation = pose.getRotation();
         confidence = up.confidence;
 
         // Saves the robot's current position

@@ -14,6 +14,7 @@ public class Globals {
     private static T265Camera camera;
     private static BNO055IMU imu;
     private static BNO055IMU imu2;
+    public static Pose2d endingPose = new Pose2d(0, 0, new Rotation2d(0));
 
     public static void setupCamera(HardwareMap hardwareMap, Pose2d pose2d) {
         System.out.println("***setting up t265");
@@ -21,6 +22,9 @@ public class Globals {
             camera = new T265Camera(new Transform2d(new Translation2d(-3.5 * 0.0254, 3.75 * 0.0254), new Rotation2d()), 0.1, hardwareMap.appContext);
             camera.setPose(pose2d);
             System.out.println("***finished setting up t265");
+        } else {
+            camera.setPose(pose2d);
+            System.out.println("***updated pose to: " + pose2d);
         }
     }
 

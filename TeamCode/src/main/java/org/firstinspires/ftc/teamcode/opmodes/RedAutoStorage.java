@@ -59,8 +59,7 @@ public class RedAutoStorage extends AutoImport {
             while (timer.seconds() < 30) {
                 sleep(100);
             }
-
-            stopCamera();
         }
+        stopCamera();
     }
 }

@@ -17,14 +17,13 @@ public class SimpleSlamraDrive extends AutoImport {
         super.runOpMode();
 
         if (opModeIsActive()) {
-
             packet.addLine("Starting Travel");
             dashboard.sendTelemetryPacket(packet);
-            slauto.drive(1000, 1000, 0, 0.0, this);
+            slauto.drive(0, 15, 0, 0.5, this);
             packet.addLine("Arrived");
             dashboard.sendTelemetryPacket(packet);
-
-            stopCamera();
         }
+        Globals.endingPose = slauto.getPose();
+        stopCamera();
     }
 }

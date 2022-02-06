@@ -44,8 +44,7 @@ public class BlueAutoWarehouse extends AutoImport {
             while (timer.seconds() < 30) {
                 sleep(100);
             }
-
-            stopCamera();
         }
+        stopCamera();
     }
 }

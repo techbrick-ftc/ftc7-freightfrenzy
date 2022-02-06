@@ -129,7 +129,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
         camera.init(EasyOpenCVImportable.CameraType.WEBCAM, hardwareMap, camera1X, camera1Y, camera2X, camera2Y, 18, 18);
 
         // initializes slamra
-        Pose2d startingPose = new Pose2d(new Translation2d(startingPoseX * 0.0254, startingPoseY * 0.0254), new Rotation2d(0));
+        Pose2d startingPose = new Pose2d((startingPoseX - endingPose.getX())  * 0.0254, (startingPoseY - endingPose.getY())  * 0.0254, new Rotation2d(-endingPose.getRotation().getRadians()));
         setupCamera(hardwareMap, startingPose);
         sleep(10000);
         startCamera();

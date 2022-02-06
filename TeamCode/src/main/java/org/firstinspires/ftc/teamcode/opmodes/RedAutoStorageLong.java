@@ -52,8 +52,7 @@ public class RedAutoStorageLong extends AutoImport {
             while (armY.isBusy()){
                 sleep(10);
             }
-
-            stopCamera();
         }
+        stopCamera();
     }
 }
