@@ -20,9 +20,13 @@ public class Globals {
         System.out.println("***setting up t265");
         if (camera == null) {
             camera = new T265Camera(new Transform2d(new Translation2d(-3.5 * 0.0254, 3.75 * 0.0254), new Rotation2d()), 0.1, hardwareMap.appContext);
+            System.out.println(pose2d.relativeTo(endingPose));
             camera.setPose(pose2d);
+            camera.start();
             System.out.println("***finished setting up t265");
         } else {
+            resetCamera();
+            System.out.println(pose2d.relativeTo(endingPose));
             camera.setPose(pose2d);
             System.out.println("***updated pose to: " + pose2d);
         }
@@ -59,5 +63,10 @@ public class Globals {
         System.out.println("***stopping t265");
         camera.stop();
         System.out.println("***stopped t265");
+    }
+
+    private static void resetCamera() {
+        camera.setPose(endingPose);
+        startCamera();
     }
 }

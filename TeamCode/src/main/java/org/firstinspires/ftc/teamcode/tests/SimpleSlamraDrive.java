@@ -19,11 +19,13 @@ public class SimpleSlamraDrive extends AutoImport {
         if (opModeIsActive()) {
             packet.addLine("Starting Travel");
             dashboard.sendTelemetryPacket(packet);
-            slauto.drive(0, 15, 0, 0.5, this);
+            slauto.drive(0, 1000, 0, 0, this);
             packet.addLine("Arrived");
             dashboard.sendTelemetryPacket(packet);
         }
         Globals.endingPose = slauto.getPose();
         stopCamera();
+        packet.addLine(endingPose.getX() + ", " + endingPose.getY());
+        dashboard.sendTelemetryPacket(packet);
     }
 }
