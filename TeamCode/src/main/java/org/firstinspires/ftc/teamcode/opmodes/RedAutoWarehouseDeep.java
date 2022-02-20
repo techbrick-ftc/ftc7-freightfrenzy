@@ -34,10 +34,9 @@ public class RedAutoWarehouseDeep extends AutoImport {
             deposit(false);
 
             // Goes into the warehouse
-            slauto.drive(60, 0, 0, 0.5, 0, this, false, true);
-            slauto.drive(65, 15, 0, 0.5, 3000, this, false, false);
-            slauto.drive(65, 35, 0, 0.5, 3000, this, false, false);
-            slauto.drive(40, 35, 0, 0.5, this);
+            slauto.drive(64, 0, 0, 0.5, 0, this, false, true, false, false);
+            slauto.drive(70, 40, 0, 0.9, 0, this, false, false, true, false);
+            slauto.drive(40, 40, 0, 0.5, this);
 
             // Lowers arm
             setArm(0, 1);

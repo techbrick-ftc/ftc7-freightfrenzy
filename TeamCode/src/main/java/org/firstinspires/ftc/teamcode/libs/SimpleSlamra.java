@@ -20,6 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.libs.TeleAuto;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.copySign;
 
 public class SimpleSlamra {
 
@@ -55,17 +56,24 @@ public class SimpleSlamra {
     }
 
     public void drive(double targetX, double targetY, double targetDegree, double speed, TeleAuto callback) {
-        drive(targetX, targetY, targetDegree, speed, 0, callback, true, true);
+        drive(targetX, targetY, targetDegree, speed, 0, callback, true, true, false, false);
     }
 
     // Main function, called to go to a target X and Y position, at a set speed and angle
-    public void drive(double targetX, double targetY, double targetDegree, double speed, int timeout, TeleAuto callback, boolean doSlow, boolean doAccel) {
+    public void drive(double targetX, double targetY, double targetDegree, double speed, int timeout, TeleAuto callback, boolean doSlow, boolean doAccel, boolean ignoreX, boolean ignoreY) {
 
         double flPower, frPower, rlPower, rrPower;
         System.out.println("Starting Angle: " + startingDegree + "\nStarting X: ");
 
         double prevX = 0;
         double prevY = 0;
+
+        double threshold;
+        if (doSlow) {
+            threshold = 1;
+        } else {
+            threshold = 2;
+        }
 
         ElapsedTime timeoutTimer = new ElapsedTime();
 
@@ -83,12 +91,16 @@ public class SimpleSlamra {
 
             double diffAvg = (abs(diffX) + abs(diffY) + (abs(diffAngle) / 6)) / 3;
 
+            if (ignoreX && abs(diffX) > abs(diffY)) {
+                diffX = copySign(diffY, diffX);
+            } else if (ignoreY && abs(diffY) > abs(diffX)) {
+                diffY = copySign(diffX, diffY);
+            }
+
             // Stops robot and ends the loop if the target positions and angle had been completed
-            if (doSlow && abs(diffX) < 1 && abs(diffY) < 1 && abs(diffAngle) < 2) {
-                System.out.println("Breaking out of Loop");
-                halt();
-                break;
-            } else if (!doSlow && abs(diffX) < 2 && abs(diffY) < 2 && abs(diffAngle) < 2) {
+            if ((abs(diffX) < threshold && abs(diffY) < threshold && abs(diffAngle) < 2 && !(ignoreX || ignoreY)) ||
+                    (ignoreX && abs(diffY) < threshold && abs(diffAngle) < 2) ||
+                    (ignoreY && abs(diffX) < threshold && abs(diffAngle) < 2)) {
                 System.out.println("Breaking out of Loop");
                 halt();
                 break;

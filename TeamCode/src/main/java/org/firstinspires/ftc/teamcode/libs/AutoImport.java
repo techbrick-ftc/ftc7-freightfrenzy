@@ -93,6 +93,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
 
     public void runOpMode() {
         // configures hardware
+        System.out.println("::::configuring hardware");
         fl = hardwareMap.get(DcMotor.class, "fl");
         fr = hardwareMap.get(DcMotor.class, "fr");
         rl = hardwareMap.get(DcMotor.class, "rl");
@@ -120,20 +121,24 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
         intakeLight = hardwareMap.get(DcMotor.class, "light");
 
         // initializes imu
+        System.out.println("::::configuring imu");
         setupIMU(hardwareMap);
         telemetry.addLine("IMU Done");
         telemetry.update();
 
         // initializes easyopencv
         // width and height of vision box are hardcoded here
+        System.out.println("::::configuring webcam");
         camera.init(EasyOpenCVImportable.CameraType.WEBCAM, hardwareMap, camera1X, camera1Y, camera2X, camera2Y, 18, 18);
 
         // initializes slamra
+        System.out.println("::::initing t265");
         Pose2d startingPose = new Pose2d(startingPoseX * 0.0254, startingPoseY * 0.0254, new Rotation2d(0));
         setupCamera(hardwareMap, startingPose);
         sleep(2000);
 
         // passes hardware to slamra class
+        System.out.println("::::configuring slamra");
         DcMotor[] motors = {fr, rr, rl, fl};
         slauto.setUp(motors, telemetry);
 
@@ -156,11 +161,12 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
             // loops this until start is pressed
             elementPosition = getElementPosition(10);
             packet.put("Position", elementPosition);
+            packet.put("confidence", getCamera().getLastReceivedCameraUpdate().confidence);
             dashboard.sendTelemetryPacket(packet);
             telemetry.addData("Position", elementPosition);
+            telemetry.addData("confidence", String.valueOf(getCamera().getLastReceivedCameraUpdate().confidence));
             telemetry.update();
         }
-
         packet.addLine("program started");
         dashboard.sendTelemetryPacket(packet);
 
@@ -170,13 +176,13 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     // Function which pushes the robot spinner into the wall, before running it. True = red
     public void setSpinny(boolean redSide, int timeout) {
         if (redSide) { // red
-            slauto.drive(65, -60, -90, 0.5, timeout, this, false, true);
+            slauto.drive(65, -60, -90, 0.5, timeout, this, false, true, false, false);
             spinner.setPower(-0.7);
             sleep(3000);
             spinner.setPower(0);
 
         } else { // blue
-            slauto.drive(65, 60, 0, 0.5, timeout, this, false, true);
+            slauto.drive(65, 60, 0, 0.5, timeout, this, false, true, false, false);
             spinner.setPower(0.7);
             sleep(3000);
             spinner.setPower(0);

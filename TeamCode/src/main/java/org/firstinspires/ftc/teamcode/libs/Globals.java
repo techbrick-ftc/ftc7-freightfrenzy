@@ -17,18 +17,21 @@ public class Globals {
     public static Pose2d endingPose = new Pose2d(0, 0, new Rotation2d(0));
 
     public static void setupCamera(HardwareMap hardwareMap, Pose2d pose2d) {
-        System.out.println("***setting up t265");
+        System.out.println("::::setting up t265");
         if (camera == null) {
             camera = new T265Camera(new Transform2d(new Translation2d(-3.5 * 0.0254, 3.75 * 0.0254), new Rotation2d()), 0.1, hardwareMap.appContext);
+            System.out.println("::::camera now exists");
             System.out.println(pose2d.relativeTo(endingPose));
             camera.setPose(pose2d);
             camera.start();
-            System.out.println("***finished setting up t265");
+            //camera.setPose(pose2d);
+            System.out.println("::::finished setting up t265");
         } else {
-            resetCamera();
+            //resetCamera();
             System.out.println(pose2d.relativeTo(endingPose));
             camera.setPose(pose2d);
-            System.out.println("***updated pose to: " + pose2d);
+            startCamera();
+            System.out.println("::::updated pose to: " + pose2d);
         }
     }
 
@@ -51,18 +54,18 @@ public class Globals {
     public static T265Camera getCamera() { return camera; }
 
     public static void startCamera() {
-        System.out.println("***starting t265");
+        System.out.println("::::starting t265");
         if (camera.isStarted()) {
-            System.out.println("***t265 is already started, stopping");
+            System.out.println("::::t265 is already started, stopping");
             camera.stop();
         }
         camera.start();
-        System.out.println("***started t256");
+        System.out.println("::::started t256");
     }
     public static void stopCamera() {
-        System.out.println("***stopping t265");
+        System.out.println("::::stopping t265");
         camera.stop();
-        System.out.println("***stopped t265");
+        System.out.println("::::stopped t265");
     }
 
     private static void resetCamera() {

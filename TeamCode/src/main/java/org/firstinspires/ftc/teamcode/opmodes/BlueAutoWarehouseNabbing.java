@@ -37,10 +37,10 @@ public class BlueAutoWarehouseNabbing extends AutoImport {
             driveUsingIMU2(-90, 0.5, armX, AxesOrder.ZYX, getImu2());
 
             // Attempts to get a block and score it
-            slauto.drive(60, 0, 0, 0.5, 0, this, false, true);
+            slauto.drive(60, 0, 0, 0.5, 0, this, false, true, false, false);
             setArm(0, 1);
-            slauto.drive(66, -15, 0, 0.75, 3000, this, false, false);
-            slauto.drive(63, -30, 0, 0.75, 3000, this, false, false);
+            slauto.drive(66, -15, 0, 0.75, 3000, this, false, false, false, false);
+            slauto.drive(63, -30, 0, 0.75, 3000, this, false, false, false, false);
 
             intake.setPower(-1);
             driveUntilFull(0.5);
@@ -48,7 +48,7 @@ public class BlueAutoWarehouseNabbing extends AutoImport {
             sleep(250);
 
             // resets thingies
-            slauto.drive(60, -40, 0, 0.6, 3000, this, false, true);
+            slauto.drive(60, -40, 0, 0.6, 3000, this, false, true, false, false);
             sleep(500);
             setArm(3, 1);
             sleep(1000);
@@ -56,9 +56,9 @@ public class BlueAutoWarehouseNabbing extends AutoImport {
             driveUsingIMU2(0, 0.5, armX, AxesOrder.ZYX, getImu2());
 
             // tries to score any block held
-            slauto.drive(65, -35, 0, 0.75, 3000, this, false, true);
-            slauto.drive(66, -15, 0, 0.75, 3000, this, false, false);
-            slauto.drive(60, 0, 0, 0.75, 3000, this, true, false);
+            slauto.drive(65, -35, 0, 0.75, 3000, this, false, true, false, false);
+            slauto.drive(66, -15, 0, 0.75, 3000, this, false, false, false, false);
+            slauto.drive(60, 0, 0, 0.75, 3000, this, true, false, false, false);
             slauto.drive(47, 14, 0, 0.75, this);
             deposit(true);
             sleep(500);
@@ -67,9 +67,9 @@ public class BlueAutoWarehouseNabbing extends AutoImport {
             deposit(false);
 
             // Goes into the warehouse
-            slauto.drive(60, 0, 0, 0.5, 0, this, false, true);
-            slauto.drive(66, -15, 0, 0.75, 3000, this, false, false);
-            slauto.drive(65, -35, 0, 0.75, 3000, this, false, false);
+            slauto.drive(60, 0, 0, 0.5, 0, this, false, true, false, false);
+            slauto.drive(66, -15, 0, 0.75, 3000, this, false, false, false, false);
+            slauto.drive(65, -35, 0, 0.75, 3000, this, false, false, false, false);
 
             // Lowers arm
             setArm(0, 1);

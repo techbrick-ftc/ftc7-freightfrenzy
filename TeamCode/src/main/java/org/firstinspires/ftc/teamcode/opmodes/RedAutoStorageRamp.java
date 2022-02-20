@@ -17,15 +17,15 @@ public class RedAutoStorageRamp extends AutoImport {
 
         if (opModeIsActive()) {
             // Goes to spinner and does spinny
-            slauto.drive(50, -60, -90, 0.75, 4000, this, true, true);
+            slauto.drive(50, -60, -90, 0.75, 4000, this, true, true, false, false);
             setSpinny(true, 1000);
 
             // Goes to the shipping hub and delivers based on the team element position
             // 1 is added to elementPosition because height's 0 is ground level, not the first layer
             setArm(elementPosition + 1, 1);
             sleep(1000);
-            slauto.drive(25, -60, -90, 0.75, 0, this, false, true);
-            slauto.drive(25, -33, -90, 0.75, 0, this, true, false);
+            slauto.drive(25, -60, -90, 0.75, 0, this, false, true, false, false);
+            slauto.drive(25, -33, -90, 0.75, 0, this, true, false, false, false);
             deposit(true);
 
             // Does a little shimmy if it is in the highest goal, as it needs a bit of help to drop
@@ -39,9 +39,9 @@ public class RedAutoStorageRamp extends AutoImport {
             deposit(false);
 
             // Goes over to the warehouse
-            slauto.drive(25, -55, -90, 0.75, 0, this, false, true);
+            slauto.drive(25, -55, -90, 0.75, 0, this, false, true, false, false);
             setArm(3, 1);
-            slauto.drive(47, -57, 0, 0.75, 0, this, true, false);
+            slauto.drive(47, -57, 0, 0.75, 0, this, true, false, false, false);
 
             // gains clearance
             setArm(5, 1);
