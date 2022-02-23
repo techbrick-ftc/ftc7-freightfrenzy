@@ -1,3 +1,5 @@
+// The algorithm that handles driving via the T265
+
 package org.firstinspires.ftc.teamcode.libs;
 import static org.firstinspires.ftc.teamcode.libs.Globals.*;
 
@@ -22,7 +24,7 @@ import org.firstinspires.ftc.teamcode.libs.TeleAuto;
 import static java.lang.Math.abs;
 import static java.lang.Math.copySign;
 
-public class SimpleSlamra {
+public class SlamraDrive {
 
     // Defines globally used variables
     private T265Camera camera;

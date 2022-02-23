@@ -1,4 +1,6 @@
-package org.firstinspires.ftc.teamcode;
+// This is the example code from https://github.com/pietroglyph/ftc265
+
+package org.firstinspires.ftc.teamcode.tests;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;

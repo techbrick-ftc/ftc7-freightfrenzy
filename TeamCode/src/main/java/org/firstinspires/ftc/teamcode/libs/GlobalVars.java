@@ -1,5 +1,5 @@
-// These are variables changeable from the FTC dashboard app, allowing us to quickly test different
-// values.
+// Variables that can be changed from FTC Dashboard
+
 /*
 package org.firstinspires.ftc.teamcode.libs;
 

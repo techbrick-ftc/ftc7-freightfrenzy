@@ -1,4 +1,5 @@
-// A simple computer vision algorithm
+// A computer vision algorithm based on colors inside of a box on the webcam.
+// A lot of what is here isn't used.
 
 package org.firstinspires.ftc.teamcode.libs;
 

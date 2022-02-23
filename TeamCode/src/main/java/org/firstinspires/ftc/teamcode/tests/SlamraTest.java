@@ -8,10 +8,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import org.firstinspires.ftc.teamcode.libs.AutoImport;
 import org.firstinspires.ftc.teamcode.libs.Globals;
 
-@Autonomous(name="SimpleSlamraDrive", group="test")
-public class SimpleSlamraDrive extends AutoImport {
+@Autonomous(name="SlamraTest", group="test")
+public class SlamraTest extends AutoImport {
 
-    public SimpleSlamraDrive() { super(0,  0, 0, 0, 0, 0); }
+    public SlamraTest() { super(0,  0, 0, 0, 0, 0); }
 
     public void runOpMode() {
         super.runOpMode();
@@ -19,7 +19,7 @@ public class SimpleSlamraDrive extends AutoImport {
         if (opModeIsActive()) {
             packet.addLine("Starting Travel");
             dashboard.sendTelemetryPacket(packet);
-            slauto.drive(0, 20, 0, 0.7, 0, this, true, true, true, false);
+            slauto.drive(0, 50, 0, 1, 0, this, true, true, true, false);
             packet.addLine("Arrived");
             dashboard.sendTelemetryPacket(packet);
         }

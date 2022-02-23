@@ -1,3 +1,5 @@
+// Used in troubleshooting the encoders on the arm
+
 package org.firstinspires.ftc.teamcode.tests;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

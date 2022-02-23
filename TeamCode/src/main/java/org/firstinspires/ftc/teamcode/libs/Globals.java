@@ -1,3 +1,5 @@
+// Holds all of the global variables and setup methods
+
 package org.firstinspires.ftc.teamcode.libs;
 
 import android.content.Context;
@@ -22,15 +24,14 @@ public class Globals {
             camera = new T265Camera(new Transform2d(new Translation2d(-3.5 * 0.0254, 3.75 * 0.0254), new Rotation2d()), 0.1, hardwareMap.appContext);
             System.out.println("::::camera now exists");
             System.out.println(pose2d.relativeTo(endingPose));
-            camera.setPose(pose2d);
             camera.start();
-            //camera.setPose(pose2d);
+            camera.setPose(pose2d);
             System.out.println("::::finished setting up t265");
         } else {
             //resetCamera();
             System.out.println(pose2d.relativeTo(endingPose));
-            camera.setPose(pose2d);
             startCamera();
+            camera.setPose(pose2d);
             System.out.println("::::updated pose to: " + pose2d);
         }
     }

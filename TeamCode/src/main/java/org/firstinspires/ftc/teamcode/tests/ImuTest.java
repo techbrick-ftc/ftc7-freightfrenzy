@@ -1,3 +1,5 @@
+// Used in figuring out how imu2 works
+
 package org.firstinspires.ftc.teamcode.tests;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;

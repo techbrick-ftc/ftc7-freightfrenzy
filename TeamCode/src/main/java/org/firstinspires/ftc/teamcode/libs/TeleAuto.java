@@ -1,3 +1,5 @@
+// Holds a global interface for things used elsewhere
+
 package org.firstinspires.ftc.teamcode.libs;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
