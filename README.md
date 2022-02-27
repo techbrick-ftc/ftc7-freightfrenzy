@@ -6,37 +6,17 @@ FTC Team 7 is a part of Techbrick Robotics, competing alongside sister teams 423
 
 ### Contacts
 Our outreach and support server can be found [here](https://discord.gg/BQSTuyTTUf).
+
 Email us at <7@techbrick.org>
 
-## Programs
-Brief descriptions of programs found in teamcode.
+## Overview
+Descriptions of important things.
 
-### libs
-Contains classes that are imported elsewhere.
+### T265 Driving
+During autonomous, we make use of the T265 for visual odometry. All driving logic for this can be found in [libs.SlamraDrive](https://github.com/techbrick-ftc/ftc7-freightfrenzy/blob/main/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/libs/SlamraDrive.java), with [libs.Globals](https://github.com/techbrick-ftc/ftc7-freightfrenzy/blob/main/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/libs/Globals.java) being used to hold the object.
 
-#### AutoImport.java
-Acts as a parent to all programs, containing the code that is run during init and methods used in auto programs.
+### Autonomous Structure
+All autonomous programs are derived from [libs.AutoImport](https://github.com/techbrick-ftc/ftc7-freightfrenzy/blob/main/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/libs/AutoImport.java), where initialization is done and functions used are defined. Individual programs can be found in [opmodes](https://github.com/techbrick-ftc/ftc7-freightfrenzy/tree/main/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/opmodes).
 
-#### EasyOpenCVImportable.java
-Holds methods used to interface with EasyOpenCV, most of which arent really used. Used in barcode detection.
-
-#### FieldCentric.java
-Handles teleop driving logic, utilizing field centricity.
-
-#### Globals.java
-Holds most global variables and methods.
-
-#### SlamraDrive.java
-Handles autonomous driving logic, utilizing the T265.
-
-### opmodes
-Contains all opmodes intended for competition use.
-
-#### *side*Auto*niche*.java
-A generic auto program, belonging to a side of the field and doing a specific set of tasks.
-
-#### MainTele.java
-The teleop program, used during driver control.
-
-### tests
-Contains all opmodes not intended for competition use.
+### Teleop
+Our teleop program can be found at [opmodes.MainTele](https://github.com/techbrick-ftc/ftc7-freightfrenzy/blob/main/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/opmodes/MainTele.java). We use [libs.FieldCentric](https://github.com/techbrick-ftc/ftc7-freightfrenzy/blob/main/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/libs/FieldCentric.java) to handle the driving logic, and we can use [libs.SlamraDrive](https://github.com/techbrick-ftc/ftc7-freightfrenzy/blob/main/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/libs/SlamraDrive.java) to handle T265 driving logic during teleop.
