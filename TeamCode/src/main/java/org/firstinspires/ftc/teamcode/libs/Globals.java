@@ -28,7 +28,6 @@ public class Globals {
             camera.setPose(pose2d);
             System.out.println("::::finished setting up t265");
         } else {
-            //resetCamera();
             System.out.println(pose2d.relativeTo(endingPose));
             startCamera();
             camera.setPose(pose2d);
@@ -67,10 +66,5 @@ public class Globals {
         System.out.println("::::stopping t265");
         camera.stop();
         System.out.println("::::stopped t265");
-    }
-
-    private static void resetCamera() {
-        camera.setPose(endingPose);
-        startCamera();
     }
 }

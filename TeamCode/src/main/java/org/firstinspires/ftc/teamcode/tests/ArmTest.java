@@ -23,7 +23,7 @@ public class ArmTest extends AutoImport {
 
         if (opModeIsActive()) {
 
-            setArm(3, 1);
+            driveUsingIMU2(45, 0.4, armX, AxesOrder.ZYX, getImu2());
 
             while (opModeIsActive()) {
                 /*packet.put("armXAngle", getImu2().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);

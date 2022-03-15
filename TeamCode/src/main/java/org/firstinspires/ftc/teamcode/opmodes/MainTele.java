@@ -64,6 +64,7 @@ public class MainTele extends AutoImport {
         boolean intaking = false;
         boolean outtaking = false;
         boolean hatchOpen = false;
+        double spinnerSpeed = 0;
         double armXMin = -0.8;
         double armXMax = 0.8;
         int armYSetting = 0;
@@ -71,12 +72,8 @@ public class MainTele extends AutoImport {
         double armYAngle = getImu2().getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle;
         double armXAngle = getImu2().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
         double armXToRobot = wrap(armXAngle - robotAngle);
-        double forkRange = 0;
-        double armYRange = 0;
-        double forkConst = 0;
-        boolean forkUp = false;
         boolean imuExited = false;
-        double armXPower; // this is just global bc telemetry
+        double armXPower; // here because telemetry
 
         // Starting servo & motor positions
 
@@ -202,23 +199,6 @@ public class MainTele extends AutoImport {
                 armX.setPower(armXPower);
             }
 
-            // Controls fork servo
-            if (cur2.y && !prev2.y && !forkUp) {
-                forkConst = -0.40;
-                forkUp = true;
-            } else if (cur2.y && !prev2.y && forkUp) {
-                forkConst = 0;
-                forkUp = false;
-            }
-
-            // Transposes 0 to -180 into -1 to 1. This is unneeded for servos configured 0 to 1
-            // armYRange = (Math.abs(armYAngle) / 90) - 1;
-
-            // Transposes 0 to -180 into 0 to 1
-            armYRange = Math.abs(armYAngle) / 215; // not divided by 180 to correct for inconsistencies in the fork servo configuration
-            forkRange = (1 - armYRange) + forkConst;
-            fork.setPosition(forkRange);
-
             // Toggles intake
             if (cur2.right_bumper && !prev2.right_bumper) {
                 if (!intaking) {
@@ -253,14 +233,26 @@ public class MainTele extends AutoImport {
                 hatchOpen = false;
             }
 
-            // Toggles spinner
-            if (gamepad2.a) {
-                spinner.setPower(0.8);
-            } else if (gamepad2.x) {
-                spinner.setPower(-0.8);
+            // Activates spinner
+            if (gamepad1.dpad_left) {
+                spinnerSpeed += 0.02;
+            } else if (gamepad1.dpad_right) {
+                spinnerSpeed -= 0.02;
             } else {
-                spinner.setPower(0);
+                spinnerSpeed = 0;
             }
+
+            spinner.setPower(Range.clip(spinnerSpeed, -1, 1));
+
+            // Controls tape measure
+            if (gamepad2.dpad_left) {
+                tape.setPower(-1);
+            } else if (gamepad2.dpad_right) {
+                tape.setPower(1);
+            } else {
+                tape.setPower(0);
+            }
+
 
             // Activates light if something is in intake
             if (colorRange.getLightDetected() > 0.11) {
@@ -302,10 +294,10 @@ public class MainTele extends AutoImport {
             packet.put("armYSetting", armYSetting);
             packet.put("intakeControl", cur2.right_bumper);
             packet.put("intakePower", intake.getPower());
-            packet.put("zArmRange", armYRange);
-            packet.put("zAttemptForkRange", forkRange);
-            packet.put("zActualForkRange", fork.getPosition());
             packet.put("aaaaArmYStatus", getImu2().getSystemStatus());
+            packet.put("x (vertical)", Globals.getImu2().getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle);
+            packet.put("y (roll?)", Globals.getImu2().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.YXZ, AngleUnit.DEGREES).firstAngle);
+            packet.put("z (horizontal)", Globals.getImu2().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
             dashboard.sendTelemetryPacket(packet);
 
             System.out.println("**start of print**");

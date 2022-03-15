@@ -39,11 +39,12 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected DcMotor armY = null;
     protected DcMotor intake = null;
     protected Servo hatch = null;
-    protected Servo fork = null;
-    protected CRServo spinner = null;
+    protected CRServo tape = null;
+
+    protected DcMotor spinner = null;
 
     protected ColorRangeSensor colorRange = null;
-    protected DcMotor intakeLight = null;
+    protected CRServo intakeLight = null;
 
     protected SlamraDrive slauto = new SlamraDrive();
     protected EasyOpenCVImportable camera = new EasyOpenCVImportable();
@@ -61,7 +62,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected int camera1Y;
     protected int camera2X;
     protected int camera2Y;
-    protected int[] armYPositions = {-34, -63, -85, -110};
+    protected int[] armYPositions = {-145, -112, -95, -70};
     protected int[] armYEncPositions = {0, -1930, -2800, -3700};
 
     protected AtomicBoolean isAsyncing = new AtomicBoolean(false);
@@ -107,12 +108,12 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
 
         intake = hardwareMap.get(DcMotor.class, "intake");
         hatch = hardwareMap.get(Servo.class, "hatch");
-        fork = hardwareMap.get(Servo.class, "fork");
+        tape = hardwareMap.get(CRServo.class, "tape");
 
-        spinner = hardwareMap.get(CRServo.class, "spinner");
+        spinner = hardwareMap.get(DcMotor.class, "spinner");
 
         colorRange = hardwareMap.get(ColorRangeSensor.class, "colorRange");
-        intakeLight = hardwareMap.get(DcMotor.class, "light");
+        intakeLight = hardwareMap.get(CRServo.class, "light");
 
         // initializes imu
         System.out.println("::::configuring imu");
@@ -147,7 +148,6 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
 
         // sets servos to starting positions
         hatch.setPosition(1);
-        fork.setPosition(1);
 
         camera.startDetection();
 
@@ -231,7 +231,8 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
                     newSpeed = Range.clip(Math.abs(diffDegree) / 5, 0.5, 1);
 
                     // sets the motor to the speed, in the correct direction
-                    motor.setPower((speed * newSpeed) * direction);
+                    // direction is negated here because of imu being flipped
+                    motor.setPower((speed * newSpeed) * -direction);
 
                     // does telemetry
                     packet.put("newSpeed", newSpeed);
@@ -251,7 +252,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
         }
     }
 
-    // Another one
+    // There are two of these so that we can use two instances in parallel. Yes, i know thats a bad solution
     public void driveUsingIMU2(double targetDegree, double speed, DcMotor motor, AxesOrder axisOrder, BNO055IMU imu){
         // Uses an atomic class variable to hold any targetDegree parameters, required to update
         // it in an existing thread.

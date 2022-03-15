@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.libs.AutoImport;
 import org.firstinspires.ftc.teamcode.libs.Globals;
 
-@Disabled
+//@Disabled
 @Autonomous(name="ImuTest", group="test")
 public class ImuTest extends AutoImport {
 

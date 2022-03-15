@@ -1,4 +1,5 @@
 // The algorithm that handles driving via the T265
+// See https://www.desmos.com/calculator/sbziuqm8co for rotation offsetting math
 
 package org.firstinspires.ftc.teamcode.libs;
 import static org.firstinspires.ftc.teamcode.libs.Globals.*;
@@ -70,7 +71,7 @@ public class SlamraDrive {
         double prevX = 0;
         double prevY = 0;
 
-        double threshold;
+        double threshold; // This determines how close to the target position the robot should be
         if (doSlow) {
             threshold = 1;
         } else {
@@ -114,7 +115,7 @@ public class SlamraDrive {
                 break;
             }
 
-            // Holds program if camera stops sending new data
+            // Holds program and stops robot if camera stops sending new data
             if (currentX == prevX && currentY == prevY) {
                 halt();
                 prevX = currentX; // sets prev positions
