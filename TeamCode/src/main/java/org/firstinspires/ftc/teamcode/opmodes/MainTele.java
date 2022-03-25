@@ -39,19 +39,8 @@ public class MainTele extends AutoImport {
         telemetry.addLine("hardware ready");
         telemetry.update();
 
-        // Defines motor configs
-        final double PI = Math.PI;
-        DcMotor[] motors = {fr, rr, rl, fl};
-        double[] motorAngles = {3*PI/4, 5*PI/4, 7*PI/4, PI/4};
-
         // Sets up motor configs
-        try {
-            drive.setUp(motors, motorAngles);
-        } catch (Exception e) {
-            packet.put("SETUP ERROR", true);
-            dashboard.sendTelemetryPacket(packet);
-            e.printStackTrace();
-        }
+        drive.setUp(new DcMotor[] {fl, rl, fr, rr});
 
         // Configures prev1 & prev2
         Gamepad prev1 = new Gamepad();
@@ -111,13 +100,13 @@ public class MainTele extends AutoImport {
                 drive.Drive(
                         Range.clip(gamepad1.left_stick_x, -0.55, 0.55),
                         Range.clip(-gamepad1.left_stick_y, -0.5, 0.5),
-                        Range.clip(-gamepad1.right_stick_x, -0.25, 0.25));
+                        Range.clip(gamepad1.right_stick_x, -0.25, 0.25));
 
             } else {
                 drive.Drive(
                         Range.clip(gamepad1.left_stick_x, -0.95, 0.95),
                         -gamepad1.left_stick_y,
-                        Range.clip(-gamepad1.right_stick_x, -0.75, 0.75));
+                        Range.clip(gamepad1.right_stick_x, -0.75, 0.75));
 
             }
 
@@ -282,6 +271,8 @@ public class MainTele extends AutoImport {
             packet.put("armYAngle", armYAngle);
             packet.put("robotAngle", robotAngle);
             packet.put("armXToRobot", armXToRobot);
+            packet.put("hatchOpen", hatchOpen);
+            packet.put("hatchPosition", hatch.getPosition());
             packet.put("fr power", fr.getPower());
             packet.put("fl power", fl.getPower());
             packet.put("rr power", rr.getPower());
