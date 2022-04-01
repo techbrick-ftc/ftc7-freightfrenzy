@@ -1,6 +1,12 @@
 // The parent of all programs
 // Handles all universal init processes and holds most functions used in auto programs
 
+/*
+TODO:
+    - reconfigure webcam
+    - fix placing on storage side
+    -
+ */
 
 package org.firstinspires.ftc.teamcode.libs;
 import static org.firstinspires.ftc.teamcode.libs.Globals.*;
@@ -62,7 +68,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected int camera1Y;
     protected int camera2X;
     protected int camera2Y;
-    protected int[] armYPositions = {-145, -112, -95, -70};
+    protected int[] armYPositions = {-38, -64, -90, -107};
     protected int[] armYEncPositions = {0, -1930, -2800, -3700};
 
     protected AtomicBoolean isAsyncing = new AtomicBoolean(false);
@@ -199,8 +205,10 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     public void deposit(boolean opening) {
         if (opening) {
             hatch.setPosition(-1);
+            intake.setPower(0.2);
         } else {
             hatch.setPosition(1);
+            intake.setPower(0);
         }
     }
 
@@ -225,7 +233,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
                     diffDegree = this.targetDegree.get() - imuDegree;
 
                     // gets a double, being 1 or -1 based on direction the motor needs to go
-                    double direction = (diffDegree) / abs(diffDegree);
+                    double direction = -(diffDegree) / abs(diffDegree);
 
                     // slows down as it approaches for more precise movements
                     newSpeed = Range.clip(Math.abs(diffDegree) / 5, 0.5, 1);

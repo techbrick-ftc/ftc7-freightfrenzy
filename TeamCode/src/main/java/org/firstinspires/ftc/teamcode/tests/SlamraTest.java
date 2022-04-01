@@ -19,7 +19,7 @@ public class SlamraTest extends AutoImport {
         if (opModeIsActive()) {
             packet.addLine("Starting Travel");
             dashboard.sendTelemetryPacket(packet);
-            slauto.drive(0, 50, 0, 1, 0, this, true, true, true, false);
+            slauto.drive(100, 0, 0, 0, this);
             packet.addLine("Arrived");
             dashboard.sendTelemetryPacket(packet);
         }

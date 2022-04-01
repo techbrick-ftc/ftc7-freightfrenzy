@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.libs.AutoImport;
 @Autonomous(name="R5 - RedAutoWarehouseDeep", group="redAuto")
 public class RedAutoWarehouseDeep extends AutoImport {
 
-    public RedAutoWarehouseDeep() { super(65, 5, 68, 215, 158, 215); } // change
+    public RedAutoWarehouseDeep() { super(65, 5, 65, 180, 165, 180); } // change
 
     public void runOpMode() {
         super.runOpMode();

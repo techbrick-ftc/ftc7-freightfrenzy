@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.libs.AutoImport;
 @Autonomous(name="R2 - RedAutoStorageLocal", group="redAuto")
 public class RedAutoStorageLocal extends AutoImport {
 
-    public RedAutoStorageLocal() { super(65, -40, 68, 215, 158, 215); }
+    public RedAutoStorageLocal() { super(65, -40, 65, 180, 165, 180); }
 
     public void runOpMode() {
         super.runOpMode();

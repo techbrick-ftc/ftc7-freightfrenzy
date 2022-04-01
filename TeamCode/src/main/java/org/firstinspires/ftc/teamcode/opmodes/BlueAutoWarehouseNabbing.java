@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.libs.AutoImport;
 @Autonomous(name="B6 - BlueAutoWarehouseNabbing", group="blueAuto")
 public class BlueAutoWarehouseNabbing extends AutoImport {
 
-    public BlueAutoWarehouseNabbing() { super(65, -17, 28, 180, 116, 215); }
+    public BlueAutoWarehouseNabbing() { super(65, -17, 30, 180, 130, 180); }
 
     public void runOpMode() {
         super.runOpMode();

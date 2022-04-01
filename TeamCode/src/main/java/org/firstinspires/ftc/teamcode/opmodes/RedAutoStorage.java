@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.libs.AutoImport;
 @Autonomous(name="R1 - RedAutoStorage", group="redAuto")
 public class RedAutoStorage extends AutoImport {
 
-    public RedAutoStorage() { super(65, -40, 68, 215, 158, 215); }
+    public RedAutoStorage() { super(65, -40, 65, 180, 165, 180); }
 
     public void runOpMode() {
         super.runOpMode();
@@ -18,7 +18,7 @@ public class RedAutoStorage extends AutoImport {
         if (opModeIsActive()) {
             // Goes to spinner and does spinny
             slauto.drive(50, -60, -90, 0.75, 4000, this, true, true, false, false);
-            setSpinny(true, 1000);
+            setSpinny(true, 700);
 
             // Goes to the shipping hub and delivers based on the team element position
             // 1 is added to elementPosition because height's 0 is ground level, not the first layer
@@ -50,7 +50,7 @@ public class RedAutoStorage extends AutoImport {
 
             // Goes into the warehouse
             slauto.drive(64, 0, 0, 0.5, 0, this, false, true, false, false);
-            slauto.drive(70, 40, 0, 0.9, 0, this, false, false, true, false);
+            slauto.drive(75, 40, 0, 0.9, 0, this, false, false, true, false);
 
             // Lowers arm
             setArm(0, 1);

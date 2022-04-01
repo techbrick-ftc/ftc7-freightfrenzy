@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.libs.AutoImport;
 @Autonomous(name="R3 - RedAutoStorageRamp", group="redAuto")
 public class RedAutoStorageRamp extends AutoImport {
 
-    public RedAutoStorageRamp() { super(65, -40, 68, 215, 158, 215); }
+    public RedAutoStorageRamp() { super(65, -40, 65, 180, 165, 180); }
 
     public void runOpMode() {
         super.runOpMode();

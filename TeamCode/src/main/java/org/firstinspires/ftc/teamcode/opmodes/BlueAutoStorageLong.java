@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.libs.Globals;
 @Autonomous(name="BlueAutoStorageLong", group="blueAuto")
 public class BlueAutoStorageLong extends AutoImport {
 
-    public BlueAutoStorageLong() { super(65,  27, 72, 215, 170, 215); }
+    public BlueAutoStorageLong() { super(65,  27, 65, 180, 165, 180); }
 
     public void runOpMode() {
         super.runOpMode();

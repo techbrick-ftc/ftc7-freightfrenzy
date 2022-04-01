@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.libs.AutoImport;
 @Autonomous(name="B1 - BlueAutoStorage", group="blueAuto")
 public class BlueAutoStorage extends AutoImport {
 
-    public BlueAutoStorage() { super(65,  27, 68, 215, 158, 215); }
+    public BlueAutoStorage() { super(65,  27, 65, 180, 165, 180); }
 
     public void runOpMode() {
         super.runOpMode();
