@@ -95,9 +95,9 @@ public class SlamraDrive {
             double diffAvg = (abs(diffX) + abs(diffY) + (abs(diffAngle) / 6)) / 3;
 
             if (ignoreX && abs(diffX) > abs(diffY)) {
-                diffX = copySign(diffY, diffX);
+                diffX = copySign(diffY * 0.5, diffX);
             } else if (ignoreY && abs(diffY) > abs(diffX)) {
-                diffY = copySign(diffX, diffY);
+                diffY = copySign(diffX * 0.5, diffY);
             }
 
             // Stops robot and ends the loop if the target positions and angle had been completed

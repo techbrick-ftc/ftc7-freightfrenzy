@@ -50,6 +50,8 @@ public class MainTele extends AutoImport {
 
         // Set up variables
         boolean speedy = true;
+        boolean armSpeedy = false;
+        double armSpeedMult = 1;
         boolean intaking = false;
         boolean outtaking = false;
         boolean hatchOpen = false;
@@ -86,7 +88,7 @@ public class MainTele extends AutoImport {
             armXToRobot = wrap(armXAngle - robotAngle);
 
             // Gives FieldCentric the stick positions based off of speed setting
-            if (cur1.b && !prev1.b ) {
+            if (cur1.right_bumper && !prev1.right_bumper ) {
                 if (!speedy) {
                     speedy = true;
                     telemetry.addLine("Speedy: On");
@@ -124,7 +126,7 @@ public class MainTele extends AutoImport {
                     if (isAsyncing.get() && driveUsingIMUReturn != null) {
                         driveUsingIMUReturn.cancel(true);
                     }
-                    double armYPower = gamepad2.left_stick_y;
+                    double armYPower = gamepad2.left_stick_y * armSpeedMult;
                     armY.setPower(armYPower);
                 } else if (!isAsyncing.get()) {
                     armY.setPower(0);
@@ -143,7 +145,7 @@ public class MainTele extends AutoImport {
                     armXMin = -0.8;
                 }
 
-                armXPower = Range.clip(-gamepad2.right_stick_x, armXMin, armXMax);
+                armXPower = Range.clip(-gamepad2.right_stick_x * armSpeedMult, armXMin, armXMax);
                 armX.setPower(armXPower);
 
             } else {
@@ -163,29 +165,22 @@ public class MainTele extends AutoImport {
                     imuExited = true;
                 }
 
-                // Increments vertical position each dpad input via encoder
-                if (cur2.dpad_up && !prev2.dpad_up && (armYSetting < 3)) {
-                    armYSetting++;
-                    armY.setTargetPosition(armYEncPositions[armYSetting]);
-                    armY.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    armY.setPower(1);
-                } else if (cur2.dpad_down && !prev2.dpad_down && (armYSetting > 0)) {
-                    armYSetting--;
-                    armY.setTargetPosition(armYEncPositions[armYSetting]);
-                    armY.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    armY.setPower(1);
-                }
-
-                // Manual control for armY
-                if (gamepad2.left_stick_button) {
-                    double armYPower = gamepad2.left_stick_y;
-                    armY.setPower(armYPower);
-                } else if (!cur2.left_stick_button && prev2.left_stick_button) {
-                    armY.setPower(0);
-                }
-
-                armXPower = Range.clip(-gamepad2.right_stick_x, -0.8, 0.8);
+                // Manual control for arm
+                double armYPower = gamepad2.left_stick_y * armSpeedMult;
+                armY.setPower(armYPower);
+                armXPower = Range.clip(-gamepad2.right_stick_x * armSpeedMult, -0.8, 0.8);
                 armX.setPower(armXPower);
+            }
+
+            // toggles arm speed levels
+            if (cur2.a && !prev2.a) {
+                if (armSpeedy) {
+                    armSpeedy = false;
+                    armSpeedMult = 0.5;
+                } else {
+                    armSpeedy = true;
+                    armSpeedMult = 1;
+                }
             }
 
             // Toggles intake
@@ -224,9 +219,9 @@ public class MainTele extends AutoImport {
 
             // Activates spinner
             if (gamepad1.dpad_left) {
-                spinnerSpeed += 0.02;
+                spinnerSpeed += 0.04;
             } else if (gamepad1.dpad_right) {
-                spinnerSpeed -= 0.02;
+                spinnerSpeed -= 0.04;
             } else {
                 spinnerSpeed = 0;
             }
@@ -241,7 +236,6 @@ public class MainTele extends AutoImport {
             } else {
                 tape.setPower(0);
             }
-
 
             // Activates light if something is in intake
             if (colorRange.getLightDetected() > 0.11) {

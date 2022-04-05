@@ -4,8 +4,8 @@
 /*
 TODO:
     - reconfigure webcam
-    - fix placing on storage side
-    -
+    - fix imu
+    - fix wall driving
  */
 
 package org.firstinspires.ftc.teamcode.libs;
@@ -68,7 +68,7 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected int camera1Y;
     protected int camera2X;
     protected int camera2Y;
-    protected int[] armYPositions = {-38, -64, -90, -107};
+    protected int[] armYPositions = {-46, -69, -86, -106};
     protected int[] armYEncPositions = {0, -1930, -2800, -3700};
 
     protected AtomicBoolean isAsyncing = new AtomicBoolean(false);
@@ -302,6 +302,13 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
                 motor.setPower(0);
                 isAsyncing2.set(false);
             });
+        }
+    }
+
+    // Waits until the distance between the target degree and the current degree is adequately small
+    public void waitForArmY(double targetDegree) {
+        while (Math.abs(targetDegree - getImu2().getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle) > 2) {
+            sleep(50);
         }
     }
 
