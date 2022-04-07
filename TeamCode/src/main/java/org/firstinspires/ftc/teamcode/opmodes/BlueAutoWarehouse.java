@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.libs.AutoImport;
 @Autonomous(name="B4 - BlueAutoWarehouse", group="blueAuto")
 public class BlueAutoWarehouse extends AutoImport {
 
-    public BlueAutoWarehouse() { super(65, -17, 30, 180, 130, 180); }
+    public BlueAutoWarehouse() { super(65, -17, 20, 165, 120, 165); }
 
     public void runOpMode() {
         super.runOpMode();
@@ -18,7 +18,7 @@ public class BlueAutoWarehouse extends AutoImport {
         if (opModeIsActive()) {
             // Goes to the shipping hub and delivers based on the team element position
             // 1 is added to elementPosition because height's 0 is ground level, not the first layer
-            setArm(elementPosition + 1, 1);
+            setArm(armY, armYEnc[elementPosition + 1], 1);
             sleep(1000);
             slauto.drive(47, 12, 0, 0.75, this);
             deposit(true);
@@ -35,10 +35,10 @@ public class BlueAutoWarehouse extends AutoImport {
 
             // Goes into the warehouse
             slauto.drive(64, 0, 0, 0.5, 0, this, false, true, false, false);
-            slauto.drive(70, -40, 0, 0.9, 0, this, false, false, true, false);
+            slauto.drive(70, -40, 0, 0.7, 0, this, false, false, true, false);
 
             // Lowers arm
-            setArm(0, 1);
+            setArm(armY, armYEnc[0], 1);
 
             while (timer.seconds() < 30) {
                 sleep(100);

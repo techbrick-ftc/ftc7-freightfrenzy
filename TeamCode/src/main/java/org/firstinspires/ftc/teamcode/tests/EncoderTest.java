@@ -25,6 +25,7 @@ public class EncoderTest extends AutoImport{
         return gamepad1.y;
     }
 
+    private int height = 0;
     @Override
     public void runOpMode() {
         super.runOpMode();
@@ -47,33 +48,12 @@ public class EncoderTest extends AutoImport{
                 idle();
             }
 
-            if(gamepad1.a){
-                intake.setPower(1);
-            }
-            else {
-                intake.setPower(0);
-            }
-
-            if (gamepad1.dpad_left){
-                armX.setPower(1);
-            }
-            else if (gamepad1.dpad_right){
-                armX.setPower(-1);
-            }
-            else {
-                armX.setPower(0);
-            }
-
-            if (cur1.dpad_up && !prev1.dpad_up){
-                armY.setTargetPosition(3000);
-                armY.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armY.setPower(.5);
-            }
-
-            else if (cur1.dpad_down && !prev1.dpad_down) {
-                armY.setTargetPosition(2000);
-                armY.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armY.setPower(.5);
+            if (cur2.dpad_up && !prev2.dpad_up && (height < 3)) {
+                height++;
+                setArm(armY, armYEnc[height], 0.5);
+            } else if (cur2.dpad_down && !prev2.dpad_down && (height > 0)) {
+                height--;
+                setArm(armY, armYEnc[height], 0.5);
             }
 
             packet.put("ArmX", armX.getCurrentPosition());

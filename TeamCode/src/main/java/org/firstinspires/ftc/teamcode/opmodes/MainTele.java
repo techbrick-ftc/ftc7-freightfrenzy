@@ -113,7 +113,12 @@ public class MainTele extends AutoImport {
             }
 
             // Controls arm
-            if (getImu2().getSystemStatus() == BNO055IMU.SystemStatus.RUNNING_FUSION) {
+            double armYPower = gamepad2.left_stick_y * armSpeedMult;
+            armY.setPower(armYPower);
+            armXPower = Range.clip(-gamepad2.right_stick_x * armSpeedMult, -0.8, 0.8);
+            armX.setPower(armXPower);
+
+            /*if (getImu2().getSystemStatus() == BNO055IMU.SystemStatus.RUNNING_FUSION) {
                 // Increments vertical position each dpad input via IMU
                 if (cur2.dpad_up && !prev2.dpad_up && (armYSetting < 3)) {
                     armYSetting++;
@@ -170,7 +175,7 @@ public class MainTele extends AutoImport {
                 armY.setPower(armYPower);
                 armXPower = Range.clip(-gamepad2.right_stick_x * armSpeedMult, -0.8, 0.8);
                 armX.setPower(armXPower);
-            }
+            }*/
 
             // toggles arm speed levels
             if (cur2.a && !prev2.a) {

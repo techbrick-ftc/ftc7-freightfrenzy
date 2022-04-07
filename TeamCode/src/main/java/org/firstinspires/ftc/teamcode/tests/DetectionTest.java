@@ -16,7 +16,7 @@ public class DetectionTest extends AutoImport {
 
     public DetectionTest() {
         // change cam values
-        super(0, 0, 30, 180, 130, 180);
+        super(0, 0, 0, 180, 0, 180);
     }
 
     public void runOpMode() {
@@ -50,7 +50,7 @@ public class DetectionTest extends AutoImport {
 
             // Try moving arm
             if (cur1.a && !prev1.a) {
-                setArm(camera.getDetection() + 1, 1);
+                //setArm(camera.getDetection() + 1, 1);
             }
 
             // Updates prev1 & 2

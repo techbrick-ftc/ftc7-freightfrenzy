@@ -69,15 +69,16 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     protected int camera2X;
     protected int camera2Y;
     protected int[] armYPositions = {-46, -69, -86, -106};
-    protected int[] armYEncPositions = {0, -1930, -2800, -3700};
+    protected int[] armYEnc = { 0, -1800, -2864, -3992};
+    protected int[] armXEnc = {1279, 0, -1409}; // in order of left, mid, right
 
-    protected AtomicBoolean isAsyncing = new AtomicBoolean(false);
+    /*protected AtomicBoolean isAsyncing = new AtomicBoolean(false);
     protected AtomicInteger targetDegree = new AtomicInteger();
     protected CompletableFuture driveUsingIMUReturn;
 
     protected AtomicBoolean isAsyncing2 = new AtomicBoolean(false);
     protected AtomicInteger targetDegree2 = new AtomicInteger();
-    protected CompletableFuture driveUsingIMUReturn2;
+    protected CompletableFuture driveUsingIMUReturn2;*/
 
     public AutoImport(int startX, int startY, int cam1X, int cam1Y, int cam2X, int cam2Y) {
         startingPoseX = startX;
@@ -109,8 +110,10 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
         armX = hardwareMap.get(DcMotor.class, "armX");
         armX.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armX.setDirection(DcMotorSimple.Direction.REVERSE);
+        resetEnc(armX);
         armY = hardwareMap.get(DcMotor.class, "armY");
         armY.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        resetEnc(armY);
 
         intake = hardwareMap.get(DcMotor.class, "intake");
         hatch = hardwareMap.get(Servo.class, "hatch");
@@ -170,6 +173,8 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
         packet.addLine("program started");
         dashboard.sendTelemetryPacket(packet);
 
+        camera.stopDetection();
+
         timer.reset();
     }
 
@@ -190,9 +195,14 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     }
 
     // Function which raises the arm to the required shipping hub positions
-    public void setArm(int height, double power) {
-        driveUsingIMU(armYPositions[height], power, armY, AxesOrder.XYZ, getImu2());
+    public void setArm(DcMotor motor, int height, double power) {
+        motor.setTargetPosition(height);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setPower(power);
     }
+    /*public void setArm(int height, double power) {
+        //driveUsingIMU(armYPositions[height], power, armY, AxesOrder.XYZ, getImu2());
+    }*/
 
     // Function which runs the intake for a certain period of time. -1 = intake, 1 = outtake
     public void runIntake(double power, int timeout) {
@@ -213,9 +223,10 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
     }
 
     // Function which uses the IMU to drive a motor
+    // temporarily actually utilizing the encoder
     // speed must be greater than 0!
     public void driveUsingIMU(double targetDegree, double speed, DcMotor motor, AxesOrder axisOrder, BNO055IMU imu){
-        // Uses an atomic class variable to hold any targetDegree parameters, required to update
+        /*// Uses an atomic class variable to hold any targetDegree parameters, required to update
         // it in an existing thread.
         this.targetDegree.set((int)targetDegree);
 
@@ -257,12 +268,12 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
                 motor.setPower(0);
                 isAsyncing.set(false);
             });
-        }
+        }*/
     }
 
     // There are two of these so that we can use two instances in parallel. Yes, i know thats a bad solution
     public void driveUsingIMU2(double targetDegree, double speed, DcMotor motor, AxesOrder axisOrder, BNO055IMU imu){
-        // Uses an atomic class variable to hold any targetDegree parameters, required to update
+        /*// Uses an atomic class variable to hold any targetDegree parameters, required to update
         // it in an existing thread.
         this.targetDegree2.set((int)targetDegree);
 
@@ -302,15 +313,15 @@ public class AutoImport extends LinearOpMode implements TeleAuto {
                 motor.setPower(0);
                 isAsyncing2.set(false);
             });
-        }
+        }*/
     }
 
     // Waits until the distance between the target degree and the current degree is adequately small
-    public void waitForArmY(double targetDegree) {
+    /*public void waitForArmY(double targetDegree) {
         while (Math.abs(targetDegree - getImu2().getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle) > 2) {
             sleep(50);
         }
-    }
+    }*/
 
     public void driveUntilFull(double power) {
         ElapsedTime et = new ElapsedTime();

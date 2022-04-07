@@ -25,7 +25,7 @@ public class BlueAutoStorageLong extends AutoImport {
 
             // Goes to the shipping hub and delivers based on the team element position
             // 1 is added to elementPosition because height's 0 is ground level, not the first layer
-            setArm(elementPosition + 1, 1);
+            setArm(armY, armYEnc[elementPosition + 1], 1);
             sleep(1000);
             slauto.drive(25, 55, 90, 0.75, 0, this, false, true, false, false);
             slauto.drive(25, 33, 90, 0.75, 0, this, true, false, false, false);
@@ -48,7 +48,7 @@ public class BlueAutoStorageLong extends AutoImport {
             slauto.drive(40, -36, 90, 1, 0, this, true, false, false, false);
 
             // Lowers arm
-            setArm(0, 1);
+            setArm(armY, armYEnc[0], 1);
             while (armY.isBusy()){
                 sleep(10);
             }

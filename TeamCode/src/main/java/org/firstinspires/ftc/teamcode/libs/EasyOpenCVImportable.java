@@ -122,8 +122,8 @@ public class EasyOpenCVImportable {
         static final Scalar GREEN = new Scalar(0, 255, 0);
 
         // Core values for position and size of vision boxes
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(pos1X, pos1Y);
-        static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(pos2X, pos2Y);
+        static Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(pos1X, pos1Y);
+        static Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(pos2X, pos2Y);
 
         static final int REGION_WIDTH = width;
         static final int REGION_HEIGHT = height;

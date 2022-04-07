@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.tests;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.libs.AutoImport;
 import org.firstinspires.ftc.teamcode.libs.FieldCentric;
 import org.firstinspires.ftc.teamcode.libs.Globals;
 
+@Disabled
 @TeleOp(name="FCDrive", group="test")
 public class FCDrive extends AutoImport {
 

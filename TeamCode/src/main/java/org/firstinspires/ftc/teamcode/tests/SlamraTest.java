@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import org.firstinspires.ftc.teamcode.libs.AutoImport;
 import org.firstinspires.ftc.teamcode.libs.Globals;
 
+@Disabled
 @Autonomous(name="SlamraTest", group="test")
 public class SlamraTest extends AutoImport {
 
